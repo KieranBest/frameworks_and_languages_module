@@ -1,3 +1,5 @@
 FROM python:slim
-
-CMD ["python3", "-m", "http.server"]
+WORKDIR /app/
+RUN pip install flask
+COPY server.py .
+CMD ["flask", "--app", "server", "run", "--port", "8000", "--host", "0.0.0.0"]
