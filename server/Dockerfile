@@ -1,5 +1,6 @@
-FROM python:slim
+FROM node:alpine
 WORKDIR /app/
-RUN pip install flask
-COPY server.py .
-CMD ["flask", "--app", "server", "run", "--port", "8000", "--host", "0.0.0.0"]
+COPY package.json ./
+RUN npm install
+COPY . .
+ENTRYPOINT ["node", "server.js"]

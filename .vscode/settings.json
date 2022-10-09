@@ -3,5 +3,8 @@
     "workbench.startupEditor": "none",
     "editor.renderWhitespace": "all",
     "editor.renderControlCharacters": true,
-    "editor.bracketPairColorization.enabled": true
+    "editor.bracketPairColorization.enabled": true,
+    "cSpell.words": [
+        "jsonify"
+    ]
 }

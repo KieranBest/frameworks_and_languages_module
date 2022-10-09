@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Test Report</title>
+    <style>body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  /* do not increase min-width as some may use split screens */
+  min-width: 800px;
+  color: #999;
+}
+
+h1 {
+  font-size: 24px;
+  color: black;
+}
+
+h2 {
+  font-size: 16px;
+  color: black;
+}
+
+p {
+  color: black;
+}
+
+a {
+  color: #999;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/******************************
+ * SUMMARY INFORMATION
+ ******************************/
+#environment td {
+  padding: 5px;
+  border: 1px solid #E6E6E6;
+}
+#environment tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+
+/******************************
+ * TEST RESULT COLORS
+ ******************************/
+span.passed,
+.passed .col-result {
+  color: green;
+}
+
+span.skipped,
+span.xfailed,
+span.rerun,
+.skipped .col-result,
+.xfailed .col-result,
+.rerun .col-result {
+  color: orange;
+}
+
+span.error,
+span.failed,
+span.xpassed,
+.error .col-result,
+.failed .col-result,
+.xpassed .col-result {
+  color: red;
+}
+
+/******************************
+ * RESULTS TABLE
+ *
+ * 1. Table Layout
+ * 2. Extra
+ * 3. Sorting items
+ *
+ ******************************/
+/*------------------
+ * 1. Table Layout
+ *------------------*/
+#results-table {
+  border: 1px solid #e6e6e6;
+  color: #999;
+  font-size: 12px;
+  width: 100%;
+}
+#results-table th,
+#results-table td {
+  padding: 5px;
+  border: 1px solid #E6E6E6;
+  text-align: left;
+}
+#results-table th {
+  font-weight: bold;
+}
+
+/*------------------
+ * 2. Extra
+ *------------------*/
+.log {
+  background-color: #e6e6e6;
+  border: 1px solid #e6e6e6;
+  color: black;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  height: 230px;
+  overflow-y: scroll;
+  padding: 5px;
+  white-space: pre-wrap;
+}
+.log:only-child {
+  height: inherit;
+}
+
+div.image {
+  border: 1px solid #e6e6e6;
+  float: right;
+  height: 240px;
+  margin-left: 5px;
+  overflow: hidden;
+  width: 320px;
+}
+div.image img {
+  width: 320px;
+}
+
+div.video {
+  border: 1px solid #e6e6e6;
+  float: right;
+  height: 240px;
+  margin-left: 5px;
+  overflow: hidden;
+  width: 320px;
+}
+div.video video {
+  overflow: hidden;
+  width: 320px;
+  height: 240px;
+}
+
+.collapsed {
+  display: none;
+}
+
+.expander::after {
+  content: " (show details)";
+  color: #BBB;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.collapser::after {
+  content: " (hide details)";
+  color: #BBB;
+  font-style: italic;
+  cursor: pointer;
+}
+
+/*------------------
+ * 3. Sorting items
+ *------------------*/
+.sortable {
+  cursor: pointer;
+}
+
+.sort-icon {
+  font-size: 0px;
+  float: left;
+  margin-right: 5px;
+  margin-top: 5px;
+  /*triangle*/
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+.inactive .sort-icon {
+  /*finish triangle*/
+  border-top: 8px solid #E6E6E6;
+}
+.asc.active .sort-icon {
+  /*finish triangle*/
+  border-bottom: 8px solid #999;
+}
+.desc.active .sort-icon {
+  /*finish triangle*/
+  border-top: 8px solid #999;
+}
+</style></head>
+  <body onLoad="init()">
+    <script>/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+
+function toArray(iter) {
+    if (iter === null) {
+        return null;
+    }
+    return Array.prototype.slice.call(iter);
+}
+
+function find(selector, elem) { // eslint-disable-line no-redeclare
+    if (!elem) {
+        elem = document;
+    }
+    return elem.querySelector(selector);
+}
+
+function findAll(selector, elem) {
+    if (!elem) {
+        elem = document;
+    }
+    return toArray(elem.querySelectorAll(selector));
+}
+
+function sortColumn(elem) {
+    toggleSortStates(elem);
+    const colIndex = toArray(elem.parentNode.childNodes).indexOf(elem);
+    let key;
+    if (elem.classList.contains('result')) {
+        key = keyResult;
+    } else if (elem.classList.contains('links')) {
+        key = keyLink;
+    } else {
+        key = keyAlpha;
+    }
+    sortTable(elem, key(colIndex));
+}
+
+function showAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(showExtras);
+}
+
+function hideAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(hideExtras);
+}
+
+function showExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.remove('collapsed');
+    expandcollapse.classList.remove('expander');
+    expandcollapse.classList.add('collapser');
+}
+
+function hideExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.add('collapsed');
+    expandcollapse.classList.remove('collapser');
+    expandcollapse.classList.add('expander');
+}
+
+function showFilters() {
+    const filterItems = document.getElementsByClassName('filter');
+    for (let i = 0; i < filterItems.length; i++)
+        filterItems[i].hidden = false;
+}
+
+function addCollapse() {
+    // Add links for show/hide all
+    const resulttable = find('table#results-table');
+    const showhideall = document.createElement('p');
+    showhideall.innerHTML = '<a href="javascript:showAllExtras()">Show all details</a> / ' +
+                            '<a href="javascript:hideAllExtras()">Hide all details</a>';
+    resulttable.parentElement.insertBefore(showhideall, resulttable);
+
+    // Add show/hide link to each result
+    findAll('.col-result').forEach(function(elem) {
+        const collapsed = getQueryParameter('collapsed') || 'Passed';
+        const extras = elem.parentNode.nextElementSibling;
+        const expandcollapse = document.createElement('span');
+        if (extras.classList.contains('collapsed')) {
+            expandcollapse.classList.add('expander');
+        } else if (collapsed.includes(elem.innerHTML)) {
+            extras.classList.add('collapsed');
+            expandcollapse.classList.add('expander');
+        } else {
+            expandcollapse.classList.add('collapser');
+        }
+        elem.appendChild(expandcollapse);
+
+        elem.addEventListener('click', function(event) {
+            if (event.currentTarget.parentNode.nextElementSibling.classList.contains('collapsed')) {
+                showExtras(event.currentTarget);
+            } else {
+                hideExtras(event.currentTarget);
+            }
+        });
+    });
+}
+
+function getQueryParameter(name) {
+    const match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+function init () { // eslint-disable-line no-unused-vars
+    resetSortHeaders();
+
+    addCollapse();
+
+    showFilters();
+
+    sortColumn(find('.initial-sort'));
+
+    findAll('.sortable').forEach(function(elem) {
+        elem.addEventListener('click',
+            function() {
+                sortColumn(elem);
+            }, false);
+    });
+}
+
+function sortTable(clicked, keyFunc) {
+    const rows = findAll('.results-table-row');
+    const reversed = !clicked.classList.contains('asc');
+    const sortedRows = sort(rows, keyFunc, reversed);
+    /* Whole table is removed here because browsers acts much slower
+     * when appending existing elements.
+     */
+    const thead = document.getElementById('results-table-head');
+    document.getElementById('results-table').remove();
+    const parent = document.createElement('table');
+    parent.id = 'results-table';
+    parent.appendChild(thead);
+    sortedRows.forEach(function(elem) {
+        parent.appendChild(elem);
+    });
+    document.getElementsByTagName('BODY')[0].appendChild(parent);
+}
+
+function sort(items, keyFunc, reversed) {
+    const sortArray = items.map(function(item, i) {
+        return [keyFunc(item), i];
+    });
+
+    sortArray.sort(function(a, b) {
+        const keyA = a[0];
+        const keyB = b[0];
+
+        if (keyA == keyB) return 0;
+
+        if (reversed) {
+            return keyA < keyB ? 1 : -1;
+        } else {
+            return keyA > keyB ? 1 : -1;
+        }
+    });
+
+    return sortArray.map(function(item) {
+        const index = item[1];
+        return items[index];
+    });
+}
+
+function keyAlpha(colIndex) {
+    return function(elem) {
+        return elem.childNodes[1].childNodes[colIndex].firstChild.data.toLowerCase();
+    };
+}
+
+function keyLink(colIndex) {
+    return function(elem) {
+        const dataCell = elem.childNodes[1].childNodes[colIndex].firstChild;
+        return dataCell == null ? '' : dataCell.innerText.toLowerCase();
+    };
+}
+
+function keyResult(colIndex) {
+    return function(elem) {
+        const strings = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed',
+            'Skipped', 'Passed'];
+        return strings.indexOf(elem.childNodes[1].childNodes[colIndex].firstChild.data);
+    };
+}
+
+function resetSortHeaders() {
+    findAll('.sort-icon').forEach(function(elem) {
+        elem.parentNode.removeChild(elem);
+    });
+    findAll('.sortable').forEach(function(elem) {
+        const icon = document.createElement('div');
+        icon.className = 'sort-icon';
+        icon.textContent = 'vvv';
+        elem.insertBefore(icon, elem.firstChild);
+        elem.classList.remove('desc', 'active');
+        elem.classList.add('asc', 'inactive');
+    });
+}
+
+function toggleSortStates(elem) {
+    //if active, toggle between asc and desc
+    if (elem.classList.contains('active')) {
+        elem.classList.toggle('asc');
+        elem.classList.toggle('desc');
+    }
+
+    //if inactive, reset all other functions and add ascending active
+    if (elem.classList.contains('inactive')) {
+        resetSortHeaders();
+        elem.classList.remove('inactive');
+        elem.classList.add('active');
+    }
+}
+
+function isAllRowsHidden(value) {
+    return value.hidden == false;
+}
+
+function filterTable(elem) { // eslint-disable-line no-unused-vars
+    const outcomeAtt = 'data-test-result';
+    const outcome = elem.getAttribute(outcomeAtt);
+    const classOutcome = outcome + ' results-table-row';
+    const outcomeRows = document.getElementsByClassName(classOutcome);
+
+    for(let i = 0; i < outcomeRows.length; i++){
+        outcomeRows[i].hidden = !elem.checked;
+    }
+
+    const rows = findAll('.results-table-row').filter(isAllRowsHidden);
+    const allRowsHidden = rows.length == 0 ? true : false;
+    const notFoundMessage = document.getElementById('not-found-message');
+    notFoundMessage.hidden = !allRowsHidden;
+}
+</script>
+    <h1>report.html</h1>
+    <p>Report generated on 07-Oct-2022 at 16:24:35 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.1.1</p>
+    <h2>Environment</h2>
+    <table id="environment">
+      <tr>
+        <td>JAVA_HOME</td>
+        <td>/home/gitpod/.sdkman/candidates/java/current</td></tr>
+      <tr>
+        <td>Packages</td>
+        <td>{"pluggy": "1.0.0", "py": "1.11.0", "pytest": "7.1.3"}</td></tr>
+      <tr>
+        <td>Platform</td>
+        <td>Linux-5.15.0-47-generic-x86_64-with-glibc2.29</td></tr>
+      <tr>
+        <td>Plugins</td>
+        <td>{"anyio": "3.6.1", "html": "3.1.1", "metadata": "2.0.2", "pylama": "8.4.1"}</td></tr>
+      <tr>
+        <td>Python</td>
+        <td>3.8.13</td></tr></table>
+    <h2>Summary</h2>
+    <p>16 tests ran in 0.40 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">2 passed</span>, <input checked="true" class="filter" data-test-result="skipped" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">3 skipped</span>, <input checked="true" class="filter" data-test-result="failed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">14 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <h2>Results</h2>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable result initial-sort" col="result">Result</th>
+          <th class="sortable" col="name">Test</th>
+          <th class="sortable" col="duration">Duration</th>
+          <th class="sortable links" col="links">Links</th></tr>
+        <tr hidden="true" id="not-found-message">
+          <th colspan="4">No results found. Try to check the filters</th></tr></thead>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_item_post_405</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/><br/>    def test_item_post_405(ENDPOINT):<br/>        ITEM = {<br/>            &quot;a&quot;: 1,<br/>            &quot;b&quot;: 2,<br/>        }<br/>        response = requests.post(ENDPOINT + &#x27;/item&#x27;, json=ITEM)<br/>&gt;       assert response.status_code == 405<br/><span class="error">E       assert 404 == 405</span><br/><span class="error">E        +  where 404 = &lt;Response [404]&gt;.status_code</span><br/><br/>test_server/test_api.py:67: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_item_post_201</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/><br/>    def test_item_post_201(ENDPOINT):<br/>        ITEM = {<br/>            &#x27;user_id&#x27;: &quot;user1234&quot;,<br/>            &#x27;keywords&#x27;: [&quot;hammer&quot;, &quot;nails&quot;, &quot;tools&quot;],<br/>            &quot;description&quot;: &quot;A hammer and nails set. In canterbury&quot;,<br/>            &quot;lat&quot;: 51.2798438,<br/>            &quot;lon&quot;: 1.0830275,<br/>        }<br/>        response = requests.post(f&#x27;{ENDPOINT}/item&#x27;, json=ITEM)<br/>&gt;       assert response.status_code == 201<br/><span class="error">E       assert 404 == 201</span><br/><span class="error">E        +  where 404 = &lt;Response [404]&gt;.status_code</span><br/><br/>test_server/test_api.py:78: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_item_get_200</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/>new_item = {&#x27;detail&#x27;: &#x27;Not Found&#x27;}<br/><br/>    def test_item_get_200(ENDPOINT, new_item):<br/>&gt;       response = requests.get(f&quot;{ENDPOINT}/item/{new_item[&#x27;id&#x27;]}&quot;)<br/><span class="error">E       KeyError: &#x27;id&#x27;</span><br/><br/>test_server/test_api.py:83: KeyError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_item_get_200_fields</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/>new_item = {&#x27;detail&#x27;: &#x27;Not Found&#x27;}<br/><br/>    def test_item_get_200_fields(ENDPOINT, new_item):<br/>&gt;       response = requests.get(f&quot;{ENDPOINT}/item/{new_item[&#x27;id&#x27;]}&quot;)<br/><span class="error">E       KeyError: &#x27;id&#x27;</span><br/><br/>test_server/test_api.py:86: KeyError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_item_get_404</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/><br/>    def test_item_get_404(ENDPOINT):<br/>        response = requests.get(f&quot;{ENDPOINT}/item/99999999&quot;)<br/>&gt;       assert response.status_code == 404<br/><span class="error">E       assert 422 == 404</span><br/><span class="error">E        +  where 422 = &lt;Response [422]&gt;.status_code</span><br/><br/>test_server/test_api.py:92: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_items_get_200</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/><br/>    def test_items_get_200(ENDPOINT):<br/>        &quot;&quot;&quot;<br/>        /items responds with list<br/>        &quot;&quot;&quot;<br/>        response = requests.get(f&quot;{ENDPOINT}/items&quot;)<br/>&gt;       assert response.status_code == 200<br/><span class="error">E       assert 404 == 200</span><br/><span class="error">E        +  where 404 = &lt;Response [404]&gt;.status_code</span><br/><br/>test_server/test_api.py:99: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_items_get_200_fields</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/>new_item = {&#x27;detail&#x27;: &#x27;Not Found&#x27;}<br/><br/>    def test_items_get_200_fields(ENDPOINT, new_item):<br/>        response = requests.get(f&quot;{ENDPOINT}/items&quot;)<br/>&gt;       assert response.status_code == 200<br/><span class="error">E       assert 404 == 200</span><br/><span class="error">E        +  where 404 = &lt;Response [404]&gt;.status_code</span><br/><br/>test_server/test_api.py:104: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_item_delete_404</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/><br/>    def test_item_delete_404(ENDPOINT):<br/>        response = requests.delete(f&quot;{ENDPOINT}/item/99999999&quot;)<br/>&gt;       assert response.status_code == 404<br/><span class="error">E       assert 405 == 404</span><br/><span class="error">E        +  where 405 = &lt;Response [405]&gt;.status_code</span><br/><br/>test_server/test_api.py:110: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_item_delete</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/>new_item = {&#x27;detail&#x27;: &#x27;Not Found&#x27;}<br/><br/>    def test_item_delete(ENDPOINT, new_item):<br/>&gt;       url = f&quot;{ENDPOINT}/item/{new_item[&#x27;id&#x27;]}&quot;<br/><span class="error">E       KeyError: &#x27;id&#x27;</span><br/><br/>test_server/test_api.py:113: KeyError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_root_options_cors_headers</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/><br/>    def test_root_options_cors_headers(ENDPOINT):<br/>        &quot;&quot;&quot;<br/>        Server must respond to OPTIONS request for use with real browser<br/>        &quot;&quot;&quot;<br/>        response = requests.options(ENDPOINT)<br/>&gt;       assert response.status_code == 204<br/><span class="error">E       assert 405 == 204</span><br/><span class="error">E        +  where 405 = &lt;Response [405]&gt;.status_code</span><br/><br/>test_server/test_api.py:126: AssertionError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_items_get_cors_headers</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/><br/>    def test_items_get_cors_headers(ENDPOINT):<br/>        response = requests.options(f&quot;{ENDPOINT}/items&quot;)<br/>&gt;       assert response.headers[&#x27;Access-Control-Allow-Origin&#x27;], &#x27;CORS Headers must be set - preferably to * for this learning exercise&#x27;<br/><br/>test_server/test_api.py:132: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>self = {&#x27;date&#x27;: &#x27;Fri, 07 Oct 2022 16:24:34 GMT&#x27;, &#x27;server&#x27;: &#x27;uvicorn&#x27;, &#x27;content-length&#x27;: &#x27;22&#x27;, &#x27;content-type&#x27;: &#x27;application/json&#x27;}<br/>key = &#x27;Access-Control-Allow-Origin&#x27;<br/><br/>    def __getitem__(self, key):<br/>&gt;       return self._store[key.lower()][1]<br/><span class="error">E       KeyError: &#x27;access-control-allow-origin&#x27;</span><br/><br/>/home/gitpod/.pyenv/versions/3.8.13/lib/python3.8/site-packages/requests/structures.py:52: KeyError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_item_contains_valid_iso_date_from</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/>item_factory = &lt;function item_factory.&lt;locals&gt;._item_factory at 0x7f174bf0d9d0&gt;<br/><br/>    def test_item_contains_valid_iso_date_from(ENDPOINT, item_factory):<br/>        &quot;&quot;&quot;<br/>        date_from has been created and is a pauseable ISO datetime<br/>        &quot;&quot;&quot;<br/>&gt;       new_item = item_factory()<br/><br/>test_server/test_api.py:170: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>kwargs = {}<br/>ITEM = {&#x27;description&#x27;: &#x27;A hammer and nails set&#x27;, &#x27;keywords&#x27;: [&#x27;hammer&#x27;, &#x27;nails&#x27;, &#x27;tools&#x27;], &#x27;lat&#x27;: 42.36797541901741, &#x27;lon&#x27;: -147.23145428476334, ...}<br/>response = &lt;Response [404]&gt;<br/>item = {&#x27;detail&#x27;: &#x27;Not Found&#x27;}<br/><br/>    def _item_factory(**kwargs):<br/>        ITEM = {<br/>            &#x27;user_id&#x27;: &quot;user1234&quot;,<br/>            &#x27;keywords&#x27;: [&quot;hammer&quot;, &quot;nails&quot;, &quot;tools&quot;],<br/>            &quot;description&quot;: &quot;A hammer and nails set&quot;,<br/>            &quot;lat&quot;: (random.random() * (70*2)) - 70,<br/>            &quot;lon&quot;: (random.random() * (180*2)) - 180,<br/>            **kwargs,<br/>        }<br/>        response = requests.post(ENDPOINT + &#x27;/item&#x27;, json=ITEM)<br/>        item = response.json()<br/>&gt;       _item_ids.add(item[&#x27;id&#x27;])<br/><span class="error">E       KeyError: &#x27;id&#x27;</span><br/><br/>test_server/test_api.py:151: KeyError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_items_contains_from_post</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">ENDPOINT = &#x27;http://localhost:8000&#x27;<br/>item_factory = &lt;function item_factory.&lt;locals&gt;._item_factory at 0x7f174bf0d700&gt;<br/><br/>    def test_items_contains_from_post(ENDPOINT, item_factory):<br/>        &quot;&quot;&quot;<br/>        Create new_item and check that it appears in the items list<br/>        &quot;&quot;&quot;<br/>&gt;       new_item = item_factory()<br/><br/>test_server/test_api.py:181: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>kwargs = {}<br/>ITEM = {&#x27;description&#x27;: &#x27;A hammer and nails set&#x27;, &#x27;keywords&#x27;: [&#x27;hammer&#x27;, &#x27;nails&#x27;, &#x27;tools&#x27;], &#x27;lat&#x27;: 53.44736219354719, &#x27;lon&#x27;: 7.872732514941475, ...}<br/>response = &lt;Response [404]&gt;<br/>item = {&#x27;detail&#x27;: &#x27;Not Found&#x27;}<br/><br/>    def _item_factory(**kwargs):<br/>        ITEM = {<br/>            &#x27;user_id&#x27;: &quot;user1234&quot;,<br/>            &#x27;keywords&#x27;: [&quot;hammer&quot;, &quot;nails&quot;, &quot;tools&quot;],<br/>            &quot;description&quot;: &quot;A hammer and nails set&quot;,<br/>            &quot;lat&quot;: (random.random() * (70*2)) - 70,<br/>            &quot;lon&quot;: (random.random() * (180*2)) - 180,<br/>            **kwargs,<br/>        }<br/>        response = requests.post(ENDPOINT + &#x27;/item&#x27;, json=ITEM)<br/>        item = response.json()<br/>&gt;       _item_ids.add(item[&#x27;id&#x27;])<br/><span class="error">E       KeyError: &#x27;id&#x27;</span><br/><br/>test_server/test_api.py:151: KeyError<br/></div></td></tr></tbody>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">test_api.py::test_items_filter_username</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">get_items = &lt;function get_items.&lt;locals&gt;._get_items at 0x7f174bf0dc10&gt;<br/>item_factory = &lt;function item_factory.&lt;locals&gt;._item_factory at 0x7f174bf0d820&gt;<br/><br/>    def test_items_filter_username(get_items, item_factory):<br/>        for i in range(6):<br/>&gt;           item_factory(user_id=f&quot;user{i//2}&quot;)<br/><br/>test_server/test_api.py:189: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _<br/><br/>kwargs = {&#x27;user_id&#x27;: &#x27;user0&#x27;}<br/>ITEM = {&#x27;description&#x27;: &#x27;A hammer and nails set&#x27;, &#x27;keywords&#x27;: [&#x27;hammer&#x27;, &#x27;nails&#x27;, &#x27;tools&#x27;], &#x27;lat&#x27;: -59.601027772673135, &#x27;lon&#x27;: -111.74847243134383, ...}<br/>response = &lt;Response [404]&gt;<br/>item = {&#x27;detail&#x27;: &#x27;Not Found&#x27;}<br/><br/>    def _item_factory(**kwargs):<br/>        ITEM = {<br/>            &#x27;user_id&#x27;: &quot;user1234&quot;,<br/>            &#x27;keywords&#x27;: [&quot;hammer&quot;, &quot;nails&quot;, &quot;tools&quot;],<br/>            &quot;description&quot;: &quot;A hammer and nails set&quot;,<br/>            &quot;lat&quot;: (random.random() * (70*2)) - 70,<br/>            &quot;lon&quot;: (random.random() * (180*2)) - 180,<br/>            **kwargs,<br/>        }<br/>        response = requests.post(ENDPOINT + &#x27;/item&#x27;, json=ITEM)<br/>        item = response.json()<br/>&gt;       _item_ids.add(item[&#x27;id&#x27;])<br/><span class="error">E       KeyError: &#x27;id&#x27;</span><br/><br/>test_server/test_api.py:151: KeyError<br/></div></td></tr></tbody>
+      <tbody class="skipped results-table-row">
+        <tr>
+          <td class="col-result">Skipped</td>
+          <td class="col-name">test_api.py::test_items_filter_location</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">(&#x27;/workspace/frameworks_and_languages_module/test_server/test_api.py&#x27;, 195, &#x27;Skipped: optional advanced functionality&#x27;)<br/></div></td></tr></tbody>
+      <tbody class="skipped results-table-row">
+        <tr>
+          <td class="col-result">Skipped</td>
+          <td class="col-name">test_api.py::test_items_filter_date_from</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">(&#x27;/workspace/frameworks_and_languages_module/test_server/test_api.py&#x27;, 205, &#x27;Skipped: optional advanced functionality&#x27;)<br/></div></td></tr></tbody>
+      <tbody class="skipped results-table-row">
+        <tr>
+          <td class="col-result">Skipped</td>
+          <td class="col-name">test_api.py::test_items_filter_keywords</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log">(&#x27;/workspace/frameworks_and_languages_module/test_server/test_api.py&#x27;, 216, &#x27;Skipped: optional advanced functionality&#x27;)<br/></div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test_api.py::test_port</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test_api.py::test_root</td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="empty log">No log output captured.</div></td></tr></tbody></table></body></html>

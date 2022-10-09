@@ -9,6 +9,10 @@ Server Framework Features
 
 ### (name of Feature 1)
 
+automatically puts in the error and confirmation codes "200 OK" "404 Not Found"
+
+
+
 (Technical description of the feature - 40ish words - 1 mark)
 (A code block snippet example demonstrating the feature - 1 mark)
 (Explain the problem-this-is-solving/why/benefits/problems - 40ish words - 1 mark)

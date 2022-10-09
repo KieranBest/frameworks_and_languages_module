@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="14" skipped="3" tests="19" time="0.398" timestamp="2022-10-07T16:24:35.076146" hostname="kieranbest-frameworksan-rkxnupaltqd"><testcase classname="test_api" name="test_port" time="0.002" /><testcase classname="test_api" name="test_root" time="0.005" /><testcase classname="test_api" name="test_item_post_405" time="0.004"><failure message="assert 404 == 405&#10; +  where 404 = &lt;Response [404]&gt;.status_code">ENDPOINT = 'http://localhost:8000'
+
+    def test_item_post_405(ENDPOINT):
+        ITEM = {
+            "a": 1,
+            "b": 2,
+        }
+        response = requests.post(ENDPOINT + '/item', json=ITEM)
+&gt;       assert response.status_code == 405
+E       assert 404 == 405
+E        +  where 404 = &lt;Response [404]&gt;.status_code
+
+test_server/test_api.py:67: AssertionError</failure></testcase><testcase classname="test_api" name="test_item_post_201" time="0.004"><failure message="assert 404 == 201&#10; +  where 404 = &lt;Response [404]&gt;.status_code">ENDPOINT = 'http://localhost:8000'
+
+    def test_item_post_201(ENDPOINT):
+        ITEM = {
+            'user_id': "user1234",
+            'keywords': ["hammer", "nails", "tools"],
+            "description": "A hammer and nails set. In canterbury",
+            "lat": 51.2798438,
+            "lon": 1.0830275,
+        }
+        response = requests.post(f'{ENDPOINT}/item', json=ITEM)
+&gt;       assert response.status_code == 201
+E       assert 404 == 201
+E        +  where 404 = &lt;Response [404]&gt;.status_code
+
+test_server/test_api.py:78: AssertionError</failure></testcase><testcase classname="test_api" name="test_item_get_200" time="0.005"><failure message="KeyError: 'id'">ENDPOINT = 'http://localhost:8000'
+new_item = {'detail': 'Not Found'}
+
+    def test_item_get_200(ENDPOINT, new_item):
+&gt;       response = requests.get(f"{ENDPOINT}/item/{new_item['id']}")
+E       KeyError: 'id'
+
+test_server/test_api.py:83: KeyError</failure></testcase><testcase classname="test_api" name="test_item_get_200_fields" time="0.005"><failure message="KeyError: 'id'">ENDPOINT = 'http://localhost:8000'
+new_item = {'detail': 'Not Found'}
+
+    def test_item_get_200_fields(ENDPOINT, new_item):
+&gt;       response = requests.get(f"{ENDPOINT}/item/{new_item['id']}")
+E       KeyError: 'id'
+
+test_server/test_api.py:86: KeyError</failure></testcase><testcase classname="test_api" name="test_item_get_404" time="0.006"><failure message="assert 422 == 404&#10; +  where 422 = &lt;Response [422]&gt;.status_code">ENDPOINT = 'http://localhost:8000'
+
+    def test_item_get_404(ENDPOINT):
+        response = requests.get(f"{ENDPOINT}/item/99999999")
+&gt;       assert response.status_code == 404
+E       assert 422 == 404
+E        +  where 422 = &lt;Response [422]&gt;.status_code
+
+test_server/test_api.py:92: AssertionError</failure></testcase><testcase classname="test_api" name="test_items_get_200" time="0.005"><failure message="assert 404 == 200&#10; +  where 404 = &lt;Response [404]&gt;.status_code">ENDPOINT = 'http://localhost:8000'
+
+    def test_items_get_200(ENDPOINT):
+        """
+        /items responds with list
+        """
+        response = requests.get(f"{ENDPOINT}/items")
+&gt;       assert response.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404]&gt;.status_code
+
+test_server/test_api.py:99: AssertionError</failure></testcase><testcase classname="test_api" name="test_items_get_200_fields" time="0.008"><failure message="assert 404 == 200&#10; +  where 404 = &lt;Response [404]&gt;.status_code">ENDPOINT = 'http://localhost:8000'
+new_item = {'detail': 'Not Found'}
+
+    def test_items_get_200_fields(ENDPOINT, new_item):
+        response = requests.get(f"{ENDPOINT}/items")
+&gt;       assert response.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404]&gt;.status_code
+
+test_server/test_api.py:104: AssertionError</failure></testcase><testcase classname="test_api" name="test_item_delete_404" time="0.005"><failure message="assert 405 == 404&#10; +  where 405 = &lt;Response [405]&gt;.status_code">ENDPOINT = 'http://localhost:8000'
+
+    def test_item_delete_404(ENDPOINT):
+        response = requests.delete(f"{ENDPOINT}/item/99999999")
+&gt;       assert response.status_code == 404
+E       assert 405 == 404
+E        +  where 405 = &lt;Response [405]&gt;.status_code
+
+test_server/test_api.py:110: AssertionError</failure></testcase><testcase classname="test_api" name="test_item_delete" time="0.005"><failure message="KeyError: 'id'">ENDPOINT = 'http://localhost:8000'
+new_item = {'detail': 'Not Found'}
+
+    def test_item_delete(ENDPOINT, new_item):
+&gt;       url = f"{ENDPOINT}/item/{new_item['id']}"
+E       KeyError: 'id'
+
+test_server/test_api.py:113: KeyError</failure></testcase><testcase classname="test_api" name="test_root_options_cors_headers" time="0.004"><failure message="assert 405 == 204&#10; +  where 405 = &lt;Response [405]&gt;.status_code">ENDPOINT = 'http://localhost:8000'
+
+    def test_root_options_cors_headers(ENDPOINT):
+        """
+        Server must respond to OPTIONS request for use with real browser
+        """
+        response = requests.options(ENDPOINT)
+&gt;       assert response.status_code == 204
+E       assert 405 == 204
+E        +  where 405 = &lt;Response [405]&gt;.status_code
+
+test_server/test_api.py:126: AssertionError</failure></testcase><testcase classname="test_api" name="test_items_get_cors_headers" time="0.004"><failure message="KeyError: 'access-control-allow-origin'">ENDPOINT = 'http://localhost:8000'
+
+    def test_items_get_cors_headers(ENDPOINT):
+        response = requests.options(f"{ENDPOINT}/items")
+&gt;       assert response.headers['Access-Control-Allow-Origin'], 'CORS Headers must be set - preferably to * for this learning exercise'
+
+test_server/test_api.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = {'date': 'Fri, 07 Oct 2022 16:24:34 GMT', 'server': 'uvicorn', 'content-length': '22', 'content-type': 'application/json'}
+key = 'Access-Control-Allow-Origin'
+
+    def __getitem__(self, key):
+&gt;       return self._store[key.lower()][1]
+E       KeyError: 'access-control-allow-origin'
+
+/home/gitpod/.pyenv/versions/3.8.13/lib/python3.8/site-packages/requests/structures.py:52: KeyError</failure></testcase><testcase classname="test_api" name="test_item_contains_valid_iso_date_from" time="0.004"><failure message="KeyError: 'id'">ENDPOINT = 'http://localhost:8000'
+item_factory = &lt;function item_factory.&lt;locals&gt;._item_factory at 0x7f174bf0d9d0&gt;
+
+    def test_item_contains_valid_iso_date_from(ENDPOINT, item_factory):
+        """
+        date_from has been created and is a pauseable ISO datetime
+        """
+&gt;       new_item = item_factory()
+
+test_server/test_api.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+kwargs = {}
+ITEM = {'description': 'A hammer and nails set', 'keywords': ['hammer', 'nails', 'tools'], 'lat': 42.36797541901741, 'lon': -147.23145428476334, ...}
+response = &lt;Response [404]&gt;
+item = {'detail': 'Not Found'}
+
+    def _item_factory(**kwargs):
+        ITEM = {
+            'user_id': "user1234",
+            'keywords': ["hammer", "nails", "tools"],
+            "description": "A hammer and nails set",
+            "lat": (random.random() * (70*2)) - 70,
+            "lon": (random.random() * (180*2)) - 180,
+            **kwargs,
+        }
+        response = requests.post(ENDPOINT + '/item', json=ITEM)
+        item = response.json()
+&gt;       _item_ids.add(item['id'])
+E       KeyError: 'id'
+
+test_server/test_api.py:151: KeyError</failure></testcase><testcase classname="test_api" name="test_items_contains_from_post" time="0.003"><failure message="KeyError: 'id'">ENDPOINT = 'http://localhost:8000'
+item_factory = &lt;function item_factory.&lt;locals&gt;._item_factory at 0x7f174bf0d700&gt;
+
+    def test_items_contains_from_post(ENDPOINT, item_factory):
+        """
+        Create new_item and check that it appears in the items list
+        """
+&gt;       new_item = item_factory()
+
+test_server/test_api.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+kwargs = {}
+ITEM = {'description': 'A hammer and nails set', 'keywords': ['hammer', 'nails', 'tools'], 'lat': 53.44736219354719, 'lon': 7.872732514941475, ...}
+response = &lt;Response [404]&gt;
+item = {'detail': 'Not Found'}
+
+    def _item_factory(**kwargs):
+        ITEM = {
+            'user_id': "user1234",
+            'keywords': ["hammer", "nails", "tools"],
+            "description": "A hammer and nails set",
+            "lat": (random.random() * (70*2)) - 70,
+            "lon": (random.random() * (180*2)) - 180,
+            **kwargs,
+        }
+        response = requests.post(ENDPOINT + '/item', json=ITEM)
+        item = response.json()
+&gt;       _item_ids.add(item['id'])
+E       KeyError: 'id'
+
+test_server/test_api.py:151: KeyError</failure></testcase><testcase classname="test_api" name="test_items_filter_username" time="0.003"><failure message="KeyError: 'id'">get_items = &lt;function get_items.&lt;locals&gt;._get_items at 0x7f174bf0dc10&gt;
+item_factory = &lt;function item_factory.&lt;locals&gt;._item_factory at 0x7f174bf0d820&gt;
+
+    def test_items_filter_username(get_items, item_factory):
+        for i in range(6):
+&gt;           item_factory(user_id=f"user{i//2}")
+
+test_server/test_api.py:189: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+kwargs = {'user_id': 'user0'}
+ITEM = {'description': 'A hammer and nails set', 'keywords': ['hammer', 'nails', 'tools'], 'lat': -59.601027772673135, 'lon': -111.74847243134383, ...}
+response = &lt;Response [404]&gt;
+item = {'detail': 'Not Found'}
+
+    def _item_factory(**kwargs):
+        ITEM = {
+            'user_id': "user1234",
+            'keywords': ["hammer", "nails", "tools"],
+            "description": "A hammer and nails set",
+            "lat": (random.random() * (70*2)) - 70,
+            "lon": (random.random() * (180*2)) - 180,
+            **kwargs,
+        }
+        response = requests.post(ENDPOINT + '/item', json=ITEM)
+        item = response.json()
+&gt;       _item_ids.add(item['id'])
+E       KeyError: 'id'
+
+test_server/test_api.py:151: KeyError</failure></testcase><testcase classname="test_api" name="test_items_filter_location" time="0.000"><skipped type="pytest.skip" message="optional advanced functionality">/workspace/frameworks_and_languages_module/test_server/test_api.py:195: optional advanced functionality</skipped></testcase><testcase classname="test_api" name="test_items_filter_date_from" time="0.000"><skipped type="pytest.skip" message="optional advanced functionality">/workspace/frameworks_and_languages_module/test_server/test_api.py:205: optional advanced functionality</skipped></testcase><testcase classname="test_api" name="test_items_filter_keywords" time="0.001"><skipped type="pytest.skip" message="optional advanced functionality">/workspace/frameworks_and_languages_module/test_server/test_api.py:216: optional advanced functionality</skipped></testcase></testsuite></testsuites>
