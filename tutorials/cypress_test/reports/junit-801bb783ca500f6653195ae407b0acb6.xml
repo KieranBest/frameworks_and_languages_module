@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.0000" tests="1" failures="1">
+  <testsuite name="Root Suite" timestamp="2022-10-17T13:55:23" tests="0" file="cypress/google.spec.cy.js" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Google" timestamp="2022-10-17T13:55:23" tests="1" time="0.0000" failures="1">
+    <testcase name="Google Search for university webpage and check university logo is present" time="0.0000" classname="Search for university webpage and check university logo is present">
+      <failure message="Timed out retrying after 4050ms: `cy.click()` failed because this element is not visible:
+
+`&lt;button id=&quot;accept-recommended-btn-handler&quot;&gt;Accept ...&lt;/button&gt;`
+
+This element `&lt;button#accept-recommended-btn-handler&gt;` is not visible because its parent `&lt;div#onetrust-pc-sdk.otPcCenter.ot-hide.ot-fade-in&gt;` has CSS property: `display: none`
+
+Fix this problem, or use `{force: true}` to disable error checking.
+
+https://on.cypress.io/element-cannot-be-interacted-with" type="CypressError"><![CDATA[CypressError: Timed out retrying after 4050ms: `cy.click()` failed because this element is not visible:
+
+`<button id="accept-recommended-btn-handler">Accept ...</button>`
+
+This element `<button#accept-recommended-btn-handler>` is not visible because its parent `<div#onetrust-pc-sdk.otPcCenter.ot-hide.ot-fade-in>` has CSS property: `display: none`
+
+Fix this problem, or use `{force: true}` to disable error checking.
+
+https://on.cypress.io/element-cannot-be-interacted-with
+    at runVisibilityCheck (https://www.google.co.uk/__cypress/runner/cypress_runner.js:147452:76)
+    at $Cy.ensureStrictVisibility (https://www.google.co.uk/__cypress/runner/cypress_runner.js:147468:12)
+    at runAllChecks (https://www.google.co.uk/__cypress/runner/cypress_runner.js:133371:14)
+    at retryActionability (https://www.google.co.uk/__cypress/runner/cypress_runner.js:133426:16)
+    at tryCatcher (https://www.google.co.uk/__cypress/runner/cypress_runner.js:11318:23)
+    at Promise.attempt.Promise.try (https://www.google.co.uk/__cypress/runner/cypress_runner.js:8592:29)
+    at whenStable (https://www.google.co.uk/__cypress/runner/cypress_runner.js:152675:65)
+    at <unknown> (https://www.google.co.uk/__cypress/runner/cypress_runner.js:152105:14)
+    at tryCatcher (https://www.google.co.uk/__cypress/runner/cypress_runner.js:11318:23)
+    at Promise._settlePromiseFromHandler (https://www.google.co.uk/__cypress/runner/cypress_runner.js:9253:31)
+    at Promise._settlePromise (https://www.google.co.uk/__cypress/runner/cypress_runner.js:9310:18)
+    at Promise._settlePromise0 (https://www.google.co.uk/__cypress/runner/cypress_runner.js:9355:10)
+    at Promise._settlePromises (https://www.google.co.uk/__cypress/runner/cypress_runner.js:9435:18)
+    at Promise._fulfill (https://www.google.co.uk/__cypress/runner/cypress_runner.js:9379:18)
+    at <unknown> (https://www.google.co.uk/__cypress/runner/cypress_runner.js:10993:46)
+From Your Spec Code:
+    at Context.eval (webpack:///./cypress/google.spec.cy.js:7:56)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

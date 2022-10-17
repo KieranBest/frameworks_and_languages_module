@@ -1,5 +1,3 @@
-//remember to "install npm express"
-
 const express = require('express')
 const app = express()
 const port = 8000
@@ -7,8 +5,8 @@ const port = 8000
 
 const cors = require('cors')
 
-const path = __dirname + '../client';
-app.use(express.static(path))
+//const path = __dirname + '../client';
+//app.use(express.static(path))
 
 app.use(cors());
 app.use(express.json());
@@ -17,9 +15,11 @@ var corsOptions = {
 }
 app.use(cors(corsOptions))
 
-Items = {
+Item = []
+
+{
     1: {
-        "itemId": 1,
+        "id": 1,
         "user_id": "user1234",
         "keywords": ["hammer", "nails", "tools"],
         "description": "A hammer and nails set",
@@ -29,29 +29,31 @@ Items = {
     }
 }
 //NEXT_ID = max(ITEMS.keys()) + 1
-
 filteredItem = []
 
 app.get('/', (req, res) => {
-    res.sendFile(path + "vue.html")
+//    res.sendFile(path + "vue.html")
     res.send('<html><body><h1>Your HTML text<h1></body></html>')
     res.status(200).json(req.body)
 })
 
 app.post('/item', (req,res) => {
-    items.push(req.body)  
+    if(object.keys(res.body).sort().tostring() !== "user_id,keywords,description,image,log,lat"){
+        return res.status(405).json()
+    }
+    Item.push(req.body)  
     res.status(201).json("Item created successfully")
 })
 
 app.get('/items', (req,res) => {
     //filteredItem = item.itemId, keywords, lat, lon, 
     //res.json(filteredItem)
-    res.json(items)
-    res.status(200).json(items)
+    res.json(Item)
+    res.status(200).json(Item)
 })
 
-app.get('/item/:itemId', (req,res) => {
-    filteredItem = item.filter(element => element.itemId === parseFloat(req.params.itemId))
+app.get('/item/:id', (req,res) => {
+    filteredItem = Item.filter(element => element.id === parseFloat(req.params.id))
     if (filteredItem.length === 0){        
         res.status(404).json("Item not found")
     }
@@ -61,14 +63,14 @@ app.get('/item/:itemId', (req,res) => {
     }
 })
 
-app.delete('/item/:itemId', (req,res) => {
-    filteredItem = item.filter(element => element.itemId === parseFloat(req.params.itemId))
+app.delete('/item/:id', (req,res) => {
+    filteredItem = Item.filter(element => element.id === parseFloat(req.params.id))
     if (filteredItem.length === 0){        
         res.status(404).json("Item not found")
     }
     else{        
-    items = items.filter(object => object.itemId !== parseFloat(req.params.itemId))
-    res.status(204).json("Ok")
+        res.status(204).json("Ok")
+        Item = Item.filter(object => object.id !== parseFloat(req.params.id))
     }
 })
 

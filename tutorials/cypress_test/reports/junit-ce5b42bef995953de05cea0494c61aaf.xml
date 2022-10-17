@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.0000" tests="1" failures="1">
+  <testsuite name="Root Suite" timestamp="2022-10-17T13:42:33" tests="0" file="cypress/google.spec.cy.js" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Google" timestamp="2022-10-17T13:42:33" tests="1" time="0.0000" failures="1">
+    <testcase name="Google Search for university webpage and check university logo is present" time="0.0000" classname="Search for university webpage and check university logo is present">
+      <failure message="Timed out retrying after 4000ms: Expected to find content: &apos;Google Search&apos; within the element: [ &lt;button#vc3jof.neDYw.tHlp8d&gt;, 4 more... ] but never did." type="AssertionError"><![CDATA[AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Google Search' within the element: [ <button#vc3jof.neDYw.tHlp8d>, 4 more... ] but never did.
+    at Context.eval (webpack:///./cypress/google.spec.cy.js:6:25)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
