@@ -11,6 +11,7 @@ Server Framework Features
 
 automatically puts in the error and confirmation codes "200 OK" "404 Not Found"
 
+error handling middleware
 
 
 (Technical description of the feature - 40ish words - 1 mark)

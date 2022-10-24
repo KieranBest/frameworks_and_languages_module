@@ -17,55 +17,55 @@
    <div id="app">
     {{ message }}
      <form @submit.prevent="addItem">
-       <input v-model="item.user_id" name="name" type="text" placeholder="type your name in">
-       <input v-model="item.keyword" name="notes" type="text" placeholder="type your notes">
+       <input v-model="Item.user_id" name="name" type="text" placeholder="type your name in">
+       <input v-model="Item.keyword" name="notes" type="text" placeholder="type your notes">
        <button>Submit</button>
      </form>
 
      <ul>
-       <li v-for="item in items">
-         <span>{{item.user_id}}</span>
-         <span>{{item.keyword}}</span>
-         <button @click="deleteItem(item.user_id)">Delete</button>
+       <li v-for="Item in Items">
+         <span>{{Item.user_id}}</span>
+         <span>{{Item.keyword}}</span>
+         <button @click="deleteItem(Item.user_id)">Delete</button>
        </li>
      </ul>
    </div>
 <script type="module">
 const { createApp } = Vue
 
-const urlParams = new URLSearchParams(window.location.search);
-    const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
+// const urlParams = new URLSearchParams(window.location.search);
+//     const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
 
-//let urlAPI = '' // 'https://8000-kieranbest-frameworksan-rkxnupaltqd.ws-eu71.gitpod.io'
+const urlAPI = 'https://8001-kieranbest-frameworksan-rkxnupaltqd.ws-eu72.gitpod.io'
 createApp({
   data() {
     return {
-      item: {
+      Item: {
         user_id: '',
         keyword: '',
       },
-      items: [
+      Items: [
     ],
-     message: 'Hello There!',
+    message: 'Hello There!',
   }
- },
+},
   created() {
    this.clearItem()
    this.getItems()
- },
+},
   methods: {
-   clearItem() {
-     this.item = {...this.item, ...{
-       id: Math.random(),
-       name: '',
-       notes: '',
+    clearItem() {
+      this.Item = {...this.Item, ...{
+        id: Math.random(),
+        name: '',
+        notes: '',
     }}
   },
-   addItem() {
-     fetch(`${urlAPI}/item/`, {
-       method:'POST',
-       headers: {'Content-Type': 'application/json'},
-       body: JSON.stringify(this.item),
+  addItem() {
+    fetch(`${urlAPI}/Item/`, {
+      method:'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(this.Item),
     })
       .then(response => response.json())
       .then(json => console.log('addItem()', json))
@@ -73,20 +73,20 @@ createApp({
       .then(this.getItems)
       .catch(err=>console.error(err));
   },
-   getItems() {
-      fetch(`${urlAPI}/items`, {
-        method: 'GET',
-})
+  getItems() {
+    fetch(`${urlAPI}/Items`, {
+      method: 'GET',
+  })
       .then(response => response.json())
-      .then(data => this.items = data)
-      .catch(err => console.error(err))
+      .then(data => this.Items = data)
+      .catch(err => console.error(err));
     },
-    deleteItem(user_id){
-    fetch('${urlAPI}/item/${user_id}',{
-        method: 'DELETE',
+  deleteItem(user_id){
+    fetch(`${urlAPI}/Item/${user_id}`,{
+      method: 'DELETE',
     })
-    .then (this.getItems)
-    .catch(err=>console.error(err));
+      .then (this.getItems)
+      .catch(err=>console.error(err));
   }
 }
 }).mount('#app')
