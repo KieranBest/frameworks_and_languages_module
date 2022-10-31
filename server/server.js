@@ -2,29 +2,42 @@ const express = require('express')
 const app = express()
 const port = 8000
 app.use(express.json());
-const { response } = require('express');
+const { createApp } = app
+
 
 //Cors stuff
-//const cors = require('cors');
-//app.use(cors());
-//var corsOptions = {
-//    origin: "https://8000-kieranbest-frameworksan-rkxnupaltqd.ws-eu71.gitpod.io"}
-//app.use(cors(corsOptions))
-
-//Creating a link with the client
-//const path = __dirname + '../client';
-//app.use(express.static(path))
+const cors = require('cors')
+app.use(cors({
+    origin:'*'
+}))
+const whitelist = ['https://8000-kieranbest-frameworksan-rkxnupaltqd.ws-eu73.gitpod.io','https://8000-kieranbest-frameworksan-rkxnupaltqd.ws-eu73.gitpod.io/vue.html?name=&notes=']
+const corsOptions={
+    origin:(origin,callback)=>{
+        if(whitelist.indexOf(origin) !== -1){
+            callback(null,true)
+        }else{
+            callback(new Error())
+        }
+    }
+}
+app.use(cors({
+    methods: ['GET','POST','DELETE']
+}))
 
 //Object of Items
-Item = [{
-    "id": 1,
-    "user_id": "Sting",
-    "keywords": ["String","another string"],
-    "description": "string",
-    "lat": 2,
-    "lon": 1,
-    "date_from": "2021-11-22T08:22:39.067408",
-}]
+
+Item = {
+    0:{
+        "user_id": "user1234",
+        "keywords": ["hammer", "nails", "tools"],
+        "description": "A hammer and nails set",
+        "image": "https://www.placekitten.com/200/300",
+        "lat": 1,
+        "lon": 1,
+        "date_from": "2021-11-22T08:22:39.067408",
+        "date_to": "2021-11-22T08:22:39.067408"
+    }
+}
 
 //Functions to create automatic values 
 function latitude(){
@@ -37,11 +50,9 @@ function auto_Id(){
     var id = Item.length+1
     return id;}
 function  new_date(){
-    //https://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript
-    let today = new Date().toISOString()
+    var today = new Date().toISOString()
     return today;}
 
-filteredItem = []
 
 //Get requests
 app.get('/', (req, res) => {
@@ -52,48 +63,44 @@ app.get('/items', (req,res) => {
     res.status(200).json(Item)
 })
 app.get('/item/:id', (req,res) => {
-    filteredItem = Item.filter(element => element.id === parseFloat(req.params.id))
-    if (filteredItem.length === 0){        
+    if(Item[Object.keys(req.params.id)] === undefined){
         res.status(404).json("Item not found")
     }
-    else{        
-        res.status(200).json(filteredItem)
+    else{
+        res.status(200).json()
     }
 })
 
-//Post request
+//foundKeys = Object.keys(associativeArray).filter(function(key) {
+//    return associativeArray[key] == value;}}
+
+
+//Post request    ------- do not use length
+
+// adapt NEXT_ID = max(ITEMS.keys()) + 1 to make javascript. max is not javascript
 app.post('/item', (req,res) => {
-    req.body={
-        id:auto_Id(),
-        user_id:req.body.user_id,
-        keywords:req.body.keywords,
-        description:req.body.description,
-        lat:latitude(),
-        lon:longitude(),
-        date_from:new_date(),
-    }
-    console.log(latitude())
-    console.log(longitude())
+    req.body.id=Object.keys(Item).length+1
 
-    Item.push(req.body)
-    console.log(req.body)
-    res.status(201).json(Item)
+
+    Item[Object.keys(Item)[Object.keys(Item).length+1]]=req.body
+
     console.log(Item)
+    //res.status(201).json(Item[item.id])
 })
+
 
 
 //Delete request
 app.delete('/item/:id', (req,res) => {
-    filteredItem = Item.filter(element => element.id === parseInt(req.params.id))
-    
-    if (filteredItem.length === 0){        
+    if (Item[Object.keys(req.params.id)] === undefined){
         res.status(404).json("Item not found")
     }
     else{        
         res.status(204).json("Ok")
-        Item = Item.filter(object => object.id !== parseFloat(req.params.id))
+        Item[Object.keys(req.params.id)].delete(Object.keys)
     }
 })
+
 
 //Listens on port 8000
 app.listen(port, () => {
@@ -102,3 +109,14 @@ app.listen(port, () => {
 
 //Exit
 process.on('SIGINT', function() {process.exit()})
+
+
+/*
+curl -v -X POST  http://localhost:8000/item -H "Content-Type: application/json" -d '{"user_id": "user1234", "keywords": [ "hammer", "nails", "tools"],   "description": "A hammer and nails set",  "image": "https://placekitten.com/200/300",   "lat": 51.2798438,"lon": 1.0830275 }'
+curl -v -X GET http://localhost:8000/items
+curl -v -X GET http://localhost:8000/item/0
+curl -v -X DELETE  http://localhost:8000/item/1
+curl -v -X OPTIONS http://localhost:8000/
+*/
+
+// req.params.id is a good feature https://www.geeksforgeeks.org/express-js-req-params-property/

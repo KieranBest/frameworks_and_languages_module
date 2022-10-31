@@ -36,7 +36,7 @@ const { createApp } = Vue
 // const urlParams = new URLSearchParams(window.location.search);
 //     const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
 
-const urlAPI = 'https://8001-kieranbest-frameworksan-rkxnupaltqd.ws-eu72.gitpod.io'
+const urlAPI = 'https://8000-kieranbest-frameworksan-rkxnupaltqd.ws-eu72.gitpod.io/vue.html'
 createApp({
   data() {
     return {
@@ -45,6 +45,7 @@ createApp({
         keyword: '',
       },
       Items: [
+        {"user_id":"user123","keyword":"keyword"}
     ],
     message: 'Hello There!',
   }
@@ -59,36 +60,35 @@ createApp({
         id: Math.random(),
         name: '',
         notes: '',
-    }}
-  },
-  addItem() {
-    fetch(`${urlAPI}/Item/`, {
-      method:'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(this.Item),
-    })
-      .then(response => response.json())
-      .then(json => console.log('addItem()', json))
-      .then(this.clearItem)
-      .then(this.getItems)
-      .catch(err=>console.error(err));
-  },
-  getItems() {
-    fetch(`${urlAPI}/Items`, {
-      method: 'GET',
-  })
-      .then(response => response.json())
-      .then(data => this.Items = data)
-      .catch(err => console.error(err));
+      }}
     },
-  deleteItem(user_id){
-    fetch(`${urlAPI}/Item/${user_id}`,{
-      method: 'DELETE',
-    })
-      .then (this.getItems)
-      .catch(err=>console.error(err));
+    addItem() {
+      fetch(`${urlAPI}/item/`, {
+        method:'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(this.Item),
+      })
+        .then(response => response.json())
+        .then(json => console.log('addItem()', json))
+        .then(this.clearItem)
+        .then(this.getItems)
+        .catch(err=>console.error(err));
+    },
+    getItems() {
+      fetch(`${urlAPI}/items`, {
+        method: 'GET',
+      })
+      .then(response => response.json())
+      .then(data => this.attendees = data)
+      .catch(err => console.error(err))
+    },
+    deleteItem(user_id){
+      fetch(`${urlAPI}/item/${user_id}`,{
+        method: 'DELETE',
+      }).then (this.getItems)
+        .catch(err=>console.error(err));
+    }
   }
-}
 }).mount('#app')
 
 </script>
