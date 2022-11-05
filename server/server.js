@@ -27,6 +27,7 @@ app.use(cors({
 //Object of Items
 
 Item = {
+    /*
     0:{
         "user_id": "user1234",
         "keywords": ["hammer", "nails", "tools"],
@@ -37,6 +38,7 @@ Item = {
         "date_from": "2021-11-22T08:22:39.067408",
         "date_to": "2021-11-22T08:22:39.067408"
     }
+    */
 }
 
 //Functions to create automatic values 
@@ -60,14 +62,14 @@ app.get('/', (req, res) => {
     res.status(200).send('<html><body><h1>Your HTML text<h1></body></html>')
 })
 app.get('/items', (req,res) => {
-    res.status(200).json(Item)
+    res.status(200).json(Object.values(Item))
 })
 app.get('/item/:id', (req,res) => {
     if(Item[Object.keys(req.params.id)] === undefined){
         res.status(404).json("Item not found")
     }
     else{
-        res.status(200).json()
+        res.status(200).json(Item[req.params.id])
     }
 })
 
@@ -75,20 +77,21 @@ app.get('/item/:id', (req,res) => {
 //    return associativeArray[key] == value;}}
 
 
-//Post request    ------- do not use length
-
-// adapt NEXT_ID = max(ITEMS.keys()) + 1 to make javascript. max is not javascript
+//Post request
 app.post('/item', (req,res) => {
-    req.body.id=Object.keys(Item).length+1
-
-
-    Item[Object.keys(Item)[Object.keys(Item).length+1]]=req.body
-
-    console.log(Item)
-    //res.status(201).json(Item[item.id])
+    req.body.id=maxValue(Object.keys(Item))
+    Item[req.body.id]=req.body
+    res.status(201).json(Item[req.body.id])
 })
-
-
+function maxValue(idValue){
+    let max = 0
+    for(let item in idValue){
+        if(idValue[item]>max){
+            max=idValue[item]
+        }
+    }
+    return parseInt(max)+1;
+}
 
 //Delete request
 app.delete('/item/:id', (req,res) => {
