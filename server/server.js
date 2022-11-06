@@ -56,28 +56,25 @@ app.get('/', (req, res) => {
 //    res.sendFile(path + "vue.html")
     res.status(200).send('<html><body><h1>Your HTML text<h1></body></html>')
 })
+app.get('/items', (req,res) => {
+    res.status(200).json(Object.values(Item))
+})
 app.get('/items/:user_id', (req,res) => {
     const searchUserId = {}
     for(item in Item){
         if(Item[item].user_id===req.params.user_id){
-            searchUserId = {
-                id: maxValue(Object.keys(Item)),
-                user_id: Item[item].user_id,
-                keywords: Item[item].keywords,
-                description: Item[item].description,
-                image: Item[item].image,
-                lat: latitude(),
-                lon: longitude(),
-                date_from: new Date().toJSON().slice(0,10),
-                date_to: new Date().toJSON().slice(0,10)
-            }
-            searchUserId[searchUserId.id]=searchUserId
+            searchUserId[Item[item].id]=Item[item]
         }
     }
     if(Object.keys(searchUserId).length>0){
+        console.log(Object.keys(searchUserId).length)
+        console.log(searchUserId)
+    //test doesnt work, get_items(user_id='user1') brings back 6 when my test only brings back 2
+
         res.status(200).json(Object.values(searchUserId))
+    }else{
+        res.status(404).json("Item not found")
     }
-    res.status(404).json("Item not found")
 })
 app.get('/item/:id', (req,res) => {
     if(Item[req.params.id] === undefined){
@@ -139,8 +136,18 @@ app.listen(port, () => {
 process.on('SIGINT', function() {process.exit()})
 
 
+// References
+// https://stackoverflow.com/questions/6268679/how-to-get-the-key-of-a-key-value-javascript-object
+// https://forum.freecodecamp.org/t/how-do-i-build-a-nested-object-in-javascript-dynamically/304543/4
+// https://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript
+// https://www.youtube.com/watch?v=Yq_WyV6lopk
+// https://rowannicholls.github.io/python/advanced/dictionaries.html
+// https://www.stechies.com/typeerror-int-object-is-not-subscriptable/?fbclid=IwAR1fBwu3xdi29EbaVPwwA2ylnrF4fMcFJdVKs58ZgrPrw22tBIbPYvqqREg
+// https://medium.com/@anshurajlive/read-dictionary-data-or-convert-dictionary-into-an-array-of-objects-in-javascript-e9c52286d746
+
+
 /*
-curl -v -X POST  http://localhost:8000/item -H "Content-Type: application/json" -d '{"user_id": "kieran", "keywords": [ "hammer", "nails", "tools"],   "description": "A hammer and nails set",  "image": "https://placekitten.com/200/300",   "lat": 51.2798438,"lon": 1.0830275 }'
+curl -v -X POST  http://localhost:8000/item -H "Content-Type: application/json" -d '{"user_id": "kim", "keywords": [ "hammer", "nails", "tools"],   "description": "A hammer and nails set",  "image": "https://placekitten.com/200/300",   "lat": 51.2798438,"lon": 1.0830275 }'
 curl -v -X GET http://localhost:8000/items
 curl -v -X GET http://localhost:8000/item/0
 curl -v -X DELETE  http://localhost:8000/item/1
