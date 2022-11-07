@@ -7,20 +7,42 @@ Technical Report
 Server Framework Features
 -------------------------
 
-### (name of Feature 1)
-
-automatically puts in the error and confirmation codes "200 OK" "404 Not Found"
-
-error handling middleware
+### Middleware IS THE FEATURE RE-DO THIS AND MAKE MIDDLEWARE THE FEATURE THAT INCLUDES THINGS LIKE REQUEST AND RESPONSE
 
 
-(Technical description of the feature - 40ish words - 1 mark)
-(A code block snippet example demonstrating the feature - 1 mark)
-(Explain the problem-this-is-solving/why/benefits/problems - 40ish words - 1 mark)
-(Provide reference urls to your sources of information about the feature - required)
+
+express.json() is a built-in middleware function in Express.
+
+framework supports middleware 
+
+https://www.tutorialspoint.com/express-js-express-json-function
+
+
+
+
+
+
+
+
+
+The request object represents the HTTP request and enables the use of parameters and query string from the url. req.query contains a property for a query parameter and is defined in the route using a '?key=value'. 
+
+```
+https://8000-kieranbest-frameworksan-rkxnupaltqd.ws-eu74.gitpod.io/items?user_id=user
+```
+
+This is beneficial because it enables us to use the query string without having to manually decode the url and enables us to search, sort, filter etc. our data.
+
+[Express.JS request](https://expressjs.com/en/api.html#req)
+[Express.JS request.query](https://expressjs.com/en/api.html#req.query)
+[dev express-req-params-req-query-and-req-body](https://dev.to/gathoni/express-req-params-req-query-and-req-body-4lpc)
 
 
 ### (name of Feature 2)
+
+
+
+
 
 (Technical description of the feature - 40ish words - 1 mark)
 (A code block snippet example demonstrating the feature - 1 mark)
@@ -39,7 +61,24 @@ error handling middleware
 Server Language Features
 -----------------------
 
-### (name of Feature 1)
+### Standard Library
+
+The standard library of javascript is small in comparison to python because of the usability of javascript and its intended purpose. It is intended to create dynamic and interactive web content and therefore does not need as many features.
+Some of its features include the:
+    1. "new Date()" constructor 
+        - Returns the current date and time with specificity down to the millisecond
+```
+date_from: new Date().toJSON().slice(0,10),
+```
+    2. go on w3 schools and find another 
+
+
+
+
+
+[w3 tutorial Date Methods](https://www.w3schools.com/js/js_date_methods.asp)
+
+
 
 (Technical description of the feature - 40ish words - 1 mark)
 (A code block snippet example demonstrating the feature - 1 mark)
@@ -47,7 +86,9 @@ Server Language Features
 (Provide reference urls to your sources of information about the feature - required)
 
 
-### (name of Feature 2)
+
+
+### toJSON()
 
 (Technical description of the feature - 40ish words - 1 mark)
 (A code block snippet example demonstrating the feature - 1 mark)

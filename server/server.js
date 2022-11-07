@@ -48,37 +48,38 @@ function latitude(){
 function longitude(){
     var longitude = (Math.random() * (180*2)) - 180
     return longitude}
-function date_from(){
-}
 
 //Get requests
 app.get('/', (req, res) => {
 //    res.sendFile(path + "vue.html")
     res.status(200).send('<html><body><h1>Your HTML text<h1></body></html>')
 })
-app.get('/items', (req,res) => {
-    res.status(200).json(Object.values(Item))
-})
-app.get('/items/:user_id', (req,res) => {
+//app.get('/items', (req,res) => {
+//    res.status(200).json(Object.values(Item))
+//})
+app.get('/items', function(req,res)
+{   //use filter
     const searchUserId = {}
     for(item in Item){
-        if(Item[item].user_id===req.params.user_id){
+        if(Item[item].user_id===req.query.user_id){
             searchUserId[Item[item].id]=Item[item]
         }
     }
     if(Object.keys(searchUserId).length>0){
         console.log(Object.keys(searchUserId).length)
         console.log(searchUserId)
-    //test doesnt work, get_items(user_id='user1') brings back 6 when my test only brings back 2
 
         res.status(200).json(Object.values(searchUserId))
     }else{
         res.status(404).json("Item not found")
     }
+    //if user req.query is empty
+
+    res.status(200).json(Object.values(Item))
+
 })
 app.get('/item/:id', (req,res) => {
     if(Item[req.params.id] === undefined){
-        res.status(404).json("Item not found")
     }
     else{
         res.status(200).json(Item[req.params.id])
@@ -144,14 +145,13 @@ process.on('SIGINT', function() {process.exit()})
 // https://rowannicholls.github.io/python/advanced/dictionaries.html
 // https://www.stechies.com/typeerror-int-object-is-not-subscriptable/?fbclid=IwAR1fBwu3xdi29EbaVPwwA2ylnrF4fMcFJdVKs58ZgrPrw22tBIbPYvqqREg
 // https://medium.com/@anshurajlive/read-dictionary-data-or-convert-dictionary-into-an-array-of-objects-in-javascript-e9c52286d746
+// https://dev.to/gathoni/express-req-params-req-query-and-req-body-4lpc
 
 
 /*
-curl -v -X POST  http://localhost:8000/item -H "Content-Type: application/json" -d '{"user_id": "kim", "keywords": [ "hammer", "nails", "tools"],   "description": "A hammer and nails set",  "image": "https://placekitten.com/200/300",   "lat": 51.2798438,"lon": 1.0830275 }'
+curl -v -X POST  http://localhost:8000/item -H "Content-Type: application/json" -d '{"user_id": "kieran", "keywords": [ "hammer", "nails", "tools"],   "description": "A hammer and nails set",  "image": "https://placekitten.com/200/300",   "lat": 51.2798438,"lon": 1.0830275 }'
 curl -v -X GET http://localhost:8000/items
 curl -v -X GET http://localhost:8000/item/0
 curl -v -X DELETE  http://localhost:8000/item/1
 curl -v -X OPTIONS http://localhost:8000/
 */
-
-// req.params.id is a good feature https://www.geeksforgeeks.org/express-js-req-params-property/
