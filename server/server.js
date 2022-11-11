@@ -59,27 +59,27 @@ app.get('/', (req, res) => {
 //})
 app.get('/items', function(req,res)
 {   //use filter
-    const searchUserId = {}
-    for(item in Item){
-        if(Item[item].user_id===req.query.user_id){
-            searchUserId[Item[item].id]=Item[item]
+    if (req.query.user_id === undefined)
+    {
+        res.status(200).json(Object.values(Item))
+    }
+    else{
+        const searchUserId = {}
+        for(item in Item){
+            if(Item[item].user_id===req.query.user_id){
+                searchUserId[Item[item].id]=Item[item]
+            }
+        }
+        if(Object.keys(searchUserId).length>0){
+            res.status(200).json(Object.values(searchUserId))
+        }else{
+            res.status(404).json("Item not found")
         }
     }
-    if(Object.keys(searchUserId).length>0){
-        console.log(Object.keys(searchUserId).length)
-        console.log(searchUserId)
-
-        res.status(200).json(Object.values(searchUserId))
-    }else{
-        res.status(404).json("Item not found")
-    }
-    //if user req.query is empty
-
-    res.status(200).json(Object.values(Item))
-
 })
 app.get('/item/:id', (req,res) => {
     if(Item[req.params.id] === undefined){
+        res.status(404).json("Item not found")
     }
     else{
         res.status(200).json(Item[req.params.id])
@@ -149,7 +149,7 @@ process.on('SIGINT', function() {process.exit()})
 
 
 /*
-curl -v -X POST  http://localhost:8000/item -H "Content-Type: application/json" -d '{"user_id": "kieran", "keywords": [ "hammer", "nails", "tools"],   "description": "A hammer and nails set",  "image": "https://placekitten.com/200/300",   "lat": 51.2798438,"lon": 1.0830275 }'
+curl -v -X POST  http://localhost:8000/item -H "Content-Type: application/json" -d '{"user_id": "user", "keywords": [ "hammer", "nails", "tools"],   "description": "A hammer and nails set",  "image": "https://placekitten.com/200/300",   "lat": 51.2798438,"lon": 1.0830275 }'
 curl -v -X GET http://localhost:8000/items
 curl -v -X GET http://localhost:8000/item/0
 curl -v -X DELETE  http://localhost:8000/item/1
