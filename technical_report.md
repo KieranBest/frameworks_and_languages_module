@@ -7,36 +7,21 @@ Technical Report
 Server Framework Features
 -------------------------
 
-### Middleware IS THE FEATURE RE-DO THIS AND MAKE MIDDLEWARE THE FEATURE THAT INCLUDES THINGS LIKE REQUEST AND RESPONSE
+### Middleware 
 
+Middleware functions work through the use of access to request and response objects
+The request object represents the HTTP request and enables the use of parameters and query string from the url. 
 
-
-express.json() is a built-in middleware function in Express.
-
-framework supports middleware 
-
-https://www.tutorialspoint.com/express-js-express-json-function
-
-
-
-
-
-
-
-
-
-The request object represents the HTTP request and enables the use of parameters and query string from the url. req.query contains a property for a query parameter and is defined in the route using a '?key=value'. 
+req.query contains a property for a query parameter and is defined in the route using a '?key=value'. 
+req.params contains a property for a parameter defined by the route using '#'.
 
 ```
 https://8000-kieranbest-frameworksan-rkxnupaltqd.ws-eu74.gitpod.io/items?user_id=user
 ```
 
-This is beneficial because it enables us to use the query string without having to manually decode the url and enables us to search, sort, filter etc. our data.
+This is beneficial because it enables us to execute any code based on the request data and allow changes to the response. 
 
-[Express.JS request](https://expressjs.com/en/api.html#req)
-[Express.JS request.query](https://expressjs.com/en/api.html#req.query)
-[dev express-req-params-req-query-and-req-body](https://dev.to/gathoni/express-req-params-req-query-and-req-body-4lpc)
-
+[Express.JS Middleware]https://expressjs.com/en/guide/using-middleware.html
 
 ### (name of Feature 2)
 

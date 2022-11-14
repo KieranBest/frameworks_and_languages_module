@@ -57,25 +57,13 @@ app.get('/', (req, res) => {
 //app.get('/items', (req,res) => {
 //    res.status(200).json(Object.values(Item))
 //})
-app.get('/items', function(req,res)
-{   //use filter
-    if (req.query.user_id === undefined)
+app.get('/items', (req,res)=>{
+    if (req.query.user_id)
     {
-        res.status(200).json(Object.values(Item))
+        res.status(200).json(Object.values(Item).filter(obj => obj.user_id == req.query.user_id))
+        return;
     }
-    else{
-        const searchUserId = {}
-        for(item in Item){
-            if(Item[item].user_id===req.query.user_id){
-                searchUserId[Item[item].id]=Item[item]
-            }
-        }
-        if(Object.keys(searchUserId).length>0){
-            res.status(200).json(Object.values(searchUserId))
-        }else{
-            res.status(404).json("Item not found")
-        }
-    }
+    res.status(200).json(Object.values(Item))
 })
 app.get('/item/:id', (req,res) => {
     if(Item[req.params.id] === undefined){
