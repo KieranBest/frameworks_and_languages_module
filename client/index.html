@@ -1,0 +1,110 @@
+<html>
+<head>
+   <meta charset="utf-8" />
+   <link id="favicon" rel="shortcut icon" type="image/png" href="data:image/png;base64,....==" />
+   <title>FreeCycle</title>
+
+   <style>
+
+   </style>
+
+   <script src="https://unpkg.com/vue@3/dist/vue.global.js">
+   </script>
+
+</head>
+<body>
+   <h1>FreeCycle</h1>
+   <div id="app">
+    {{ message }}
+     <form  @submit.prevent="create_item" data-action="create_item">
+       User Id: <input v-model="user_id" name="user_id" type="text" placeholder="type your name in"><br>
+       Keywords: <input v-model="keywords" name="keywords" type="text" placeholder="type your keywords"><br>
+       Description: <input v-model="description" name="description" type="text" placeholder="type your keywords"><br>       Image :<input v-model="Item.image" name="image" type="https://www.placekitten.com/200/300" placeholder="type your keywords">
+       Latitude: <input v-model="lat" name="lat" type="text" placeholder="type your keywords"><br>
+       Longitude: <input v-model="lon" name="lon" type="text" placeholder="type your keywords"><br>
+       <button>Submit</button>
+     </form>
+     <ul>
+       <li v-for="Item in Items">
+         User Id: <span>{{user_id}}</span>
+         Keywords: <span>{{keywords}}</span>
+         Description: <span>{{description}}</span>
+         <span>{{image}}</span>
+         Latitude: <span>{{lat}}</span>
+         Longitude: <span>{{lon}}</span>
+         <button @click="deleteItem(Item.user_id)">Delete</button>
+       </li>
+     </ul>
+   </div>
+<script type="module">
+const { createApp } = Vue
+
+const api = '' //https://8000-kieranbest-frameworksan-rkxnupaltqd.ws-eu74.gitpod.io/
+const urlParams = new URLSearchParams(window.location.search);
+const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
+
+createApp({
+  data() {
+    return {
+      Item: {
+        user_id: '',
+        keywords: '',
+        description: '',
+        image: '',
+        lat: '',
+        lon: '',
+      },
+      Items: [
+        {"user_id":"kieran",
+        "keyword":"keyword",
+        "description": 'description',
+        "image": 'https://www.placekitten.com/200/300',
+        "lat": '1',
+        "lon": '1',}
+    ],
+  }
+},
+  created() {
+   this.clearItem()
+   this.getItems()
+},
+  methods: {
+    clearItem() {
+      this.Item = {...this.Item, ...{
+        id: Math.random(),
+        name: '',
+        notes: '',
+      }}
+    },
+    create_item() {
+      fetch(`${urlAPI}/item/`, {
+        method:'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(this.Item),
+      })
+        .then(response => response.json())
+        .then(json => console.log('create_item', json))
+        .then(this.clearItem)
+        .then(this.getItems)
+        .catch(err=>console.error(err));
+    },
+    getItems() {
+      fetch(`${urlAPI}/items`, {
+        method: 'GET',
+      })
+      .then(response => response.json())
+      .then(data => this.attendees = data)
+      .catch(err => console.error(err))
+    },
+    deleteItem(user_id){
+      fetch(`${urlAPI}/item/${user_id}`,{
+        method: 'DELETE',
+      }).then (this.getItems)
+        .catch(err=>console.error(err));
+    }
+  }
+}).mount('#app')
+
+</script>
+</body>
+</html>

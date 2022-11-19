@@ -1,31 +1,23 @@
 const express = require('express')
 const app = express()
 const port = 8000
-app.use(express.json());
-const { createApp } = app
+const cors = require('cors')
+const path = require('path')
 
+//const { createApp } = app
+
+//app.use(express.static(path.join(__dirname, '/client')))
 
 //Cors stuff
-const cors = require('cors')
 app.use(cors({
-    origin:'*'
+    //origin:'http://localhost:8001',
+    methods: ['GET','POST','DELETE','OPTIONS']
 }))
-const whitelist = ['https://8000-kieranbest-frameworksan-rkxnupaltqd.ws-eu73.gitpod.io','https://8000-kieranbest-frameworksan-rkxnupaltqd.ws-eu73.gitpod.io/vue.html?name=&notes=']
-const corsOptions={
-    origin:(origin,callback)=>{
-        if(whitelist.indexOf(origin) !== -1){
-            callback(null,true)
-        }else{
-            callback(new Error())
-        }
-    }
-}
-app.use(cors({
-    methods: ['GET','POST','DELETE']
-}))
+
+app.use(express.urlencoded({extended:false}))
+app.use(express.json())
 
 //Object of Items
-
 Item = {
     /*
     0:{
@@ -50,13 +42,9 @@ function longitude(){
     return longitude}
 
 //Get requests
-app.get('/', (req, res) => {
-//    res.sendFile(path + "vue.html")
-    res.status(200).send('<html><body><h1>Your HTML text<h1></body></html>')
+app.get('/', function (req, res) {
+    res.status(200).send('<html><body>Your HTML text</body></html>')
 })
-//app.get('/items', (req,res) => {
-//    res.status(200).json(Object.values(Item))
-//})
 app.get('/items', (req,res)=>{
     if (req.query.user_id)
     {
@@ -88,7 +76,7 @@ app.post('/item', (req,res) => {
         date_to: new Date().toJSON().slice(0,10)
     }
     if(!newItem.user_id || !newItem.keywords || !newItem.description){
-        res.status(405).json("Empty Fields")
+        res.status(405).json("There is an empty field")
     }else{
         Item[newItem.id]=newItem
         res.status(201).json(Item[newItem.id])
