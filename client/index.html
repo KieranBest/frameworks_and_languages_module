@@ -18,21 +18,23 @@
     {{ message }}
      <form  @submit.prevent="create_item" data-action="create_item">
        User Id: <input v-model="user_id" name="user_id" type="text" placeholder="type your name in"><br>
-       Keywords: <input v-model="keywords" name="keywords" type="text" placeholder="type your keywords"><br>
-       Description: <input v-model="description" name="description" type="text" placeholder="type your keywords"><br>       Image :<input v-model="Item.image" name="image" type="https://www.placekitten.com/200/300" placeholder="type your keywords">
-       Latitude: <input v-model="lat" name="lat" type="text" placeholder="type your keywords"><br>
-       Longitude: <input v-model="lon" name="lon" type="text" placeholder="type your keywords"><br>
+       Keywords: <input v-model="keywords" name="keywords" type="text" placeholder="type some keywords"><br>
+       Description: <input v-model="description" name="description" type="text" placeholder="enter a description"><br>       
+       Image: <input v-model="Item.image" name="image" type="url" placeholder="input your image url"><br>
+       Latitude: <input v-model="lat" name="lat" type="text" placeholder="type your latitude"><br>
+       Longitude: <input v-model="lon" name="lon" type="text" placeholder="type your longitude"><br>
        <button>Submit</button>
      </form>
      <ul>
-       <li v-for="Item in Items">
+       <li v-for="Item in Items" >
+         <span data-field="id">{{id}}</span>
          User Id: <span>{{user_id}}</span>
          Keywords: <span>{{keywords}}</span>
          Description: <span>{{description}}</span>
          <span>{{image}}</span>
          Latitude: <span>{{lat}}</span>
          Longitude: <span>{{lon}}</span>
-         <button @click="deleteItem(Item.user_id)">Delete</button>
+         <button type="button" @click="delete(id)" data-field="id" data-action="delete">Delete</button>
        </li>
      </ul>
    </div>
@@ -47,6 +49,7 @@ createApp({
   data() {
     return {
       Item: {
+        id: '',
         user_id: '',
         keywords: '',
         description: '',
@@ -55,7 +58,9 @@ createApp({
         lon: '',
       },
       Items: [
-        {"user_id":"kieran",
+        {
+        "id":0,
+        "user_id":"kieran",
         "keyword":"keyword",
         "description": 'description',
         "image": 'https://www.placekitten.com/200/300',
@@ -93,11 +98,11 @@ createApp({
         method: 'GET',
       })
       .then(response => response.json())
-      .then(data => this.attendees = data)
+      .then(data => this.Item = data)
       .catch(err => console.error(err))
     },
-    deleteItem(user_id){
-      fetch(`${urlAPI}/item/${user_id}`,{
+    delete(id){
+      fetch(`${urlAPI}/item/${id}`,{
         method: 'DELETE',
       }).then (this.getItems)
         .catch(err=>console.error(err));
