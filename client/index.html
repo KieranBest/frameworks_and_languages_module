@@ -15,58 +15,50 @@
 <body>
    <h1>FreeCycle</h1>
    <div id="app">
-    {{ message }}
-     <form  @submit.prevent="create_item" data-action="create_item">
-       User Id: <input v-model="user_id" name="user_id" type="text" placeholder="type your name in"><br>
-       Keywords: <input v-model="keywords" name="keywords" type="text" placeholder="type some keywords"><br>
-       Description: <input v-model="description" name="description" type="text" placeholder="enter a description"><br>       
+     <form  @:submit.prevent="create_item" data-action="create_item">
+       User Id: <input v-model="Item.user_id" name="user_id" type="text" placeholder="type your name in"><br>
+       Keywords: <input v-model="Item.keywords" name="keywords" type="text" placeholder="type some keywords"><br>
+       Description: <textarea v-model="Item.description" name="description" type="text" placeholder="enter a description"></textarea><br>       
        Image: <input v-model="Item.image" name="image" type="url" placeholder="input your image url"><br>
-       Latitude: <input v-model="lat" name="lat" type="text" placeholder="type your latitude"><br>
-       Longitude: <input v-model="lon" name="lon" type="text" placeholder="type your longitude"><br>
+       Latitude: <input v-model="Item.lat" name="lat" type="text" placeholder="type your latitude"><br>
+       Longitude: <input v-model="Item.lon" name="lon" type="text" placeholder="type your longitude"><br>
        <button>Submit</button>
      </form>
-     <ul>
-       <li v-for="Item in Items" >
-         <span data-field="id">{{id}}</span>
-         User Id: <span>{{user_id}}</span>
-         Keywords: <span>{{keywords}}</span>
-         Description: <span>{{description}}</span>
-         <span>{{image}}</span>
-         Latitude: <span>{{lat}}</span>
-         Longitude: <span>{{lon}}</span>
-         <button @click="delete(id)" data-field="id" data-action="delete">Delete</button>
+     <ul data-action="create_item">
+       <li v-for="Item in Items">
+         <span data-field="id">{{Item.id}}</span>
+         User Id: <span>{{Item.user_id}}</span>
+         Keywords: <span>{{Item.keywords}}</span>
+         Description: <span>{{Item.description}}</span>
+         <span>img src={{image}}</span>
+         Latitude: <span>{{Item.lat}}</span>
+         Longitude: <span>{{Item.lon}}</span>
+         <button @click="delete(Item.id)" data-field="id" data-action="delete">Delete</button>
        </li>
      </ul>
    </div>
 <script type="module">
 const { createApp } = Vue
 
-const api = '' //https://8000-kieranbest-frameworksan-rkxnupaltqd.ws-eu74.gitpod.io/
+const DEFAULT_API = '/api/v1';  // default to current http(s)://currentHost:currentPort/api/v1'
 const urlParams = new URLSearchParams(window.location.search);
 const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
 
 createApp({
-  data() {
+  data(){
     return {
-      Item: {
-        id: '',
-        user_id: '',
-        keywords: '',
-        description: '',
-        image: '',
-        lat: '',
-        lon: '',
-      },
-      Items: [
-        {
-        "id":0,
-        "user_id":"kieran",
-        "keyword":"keyword",
-        "description": 'description',
-        "image": 'https://www.placekitten.com/200/300',
-        "lat": '1',
-        "lon": '1',}
-    ],
+        Item: {
+          id:'',
+          user_id:'',
+          keywords:'',
+          description:'',
+          image:'',
+          lat:'',
+          lon:'',
+          date_from:'',
+          date_to:''
+        },
+        Items: [],
   }
 },
   created() {
@@ -75,20 +67,23 @@ createApp({
 },
   methods: {
     clearItem() {
-      this.Item = {...this.Item, ...{
-        id: Math.random(),
-        name: '',
-        notes: '',
+      this.Item = { ...this.Item, ...{
+        user_id: '',
+        keywords: '',
+        description: '',
+        image: '',
+        lat: '',
+        lon: '',
       }}
     },
     create_item() {
-      fetch(`${urlAPI}/item/`, {
+      fetch(`${urlAPI}/item`, {
         method:'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(this.Item),
-      })
+      })         
         .then(response => response.json())
-        .then(json => console.log('create_item', json))
+        .then(json => console.log('create_item()',json))
         .then(this.clearItem)
         .then(this.getItems)
         .catch(err=>console.error(err));
@@ -98,8 +93,8 @@ createApp({
         method: 'GET',
       })
       .then(response => response.json())
-      .then(data => this.Item = data)
-      .catch(err => console.error(err))
+      .then(data => this.Items = data)
+      .catch(err => console.error(err));
     },
     delete(id){
       fetch(`${urlAPI}/item/${id}`,{

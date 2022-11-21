@@ -33,19 +33,11 @@ Item = {
     */
 }
 
-//Functions to create automatic values 
-function latitude(){
-    var latitude = (Math.random() * (70*2)) - 70
-    return latitude}
-function longitude(){
-    var longitude = (Math.random() * (180*2)) - 180
-    return longitude}
-
 //Get requests
 app.get('/', function (req, res) {
     res.status(200).send('<html><body>Your HTML text</body></html>')
 })
-app.get('/items', (req,res)=>{
+app.get('/items', (req,res) => {
     if (req.query.user_id)
     {
         res.status(200).json(Object.values(Item).filter(obj => obj.user_id == req.query.user_id))
@@ -70,11 +62,13 @@ app.post('/item', (req,res) => {
         keywords: req.body.keywords,
         description: req.body.description,
         image: req.body.image,
-        lat: latitude(),
-        lon: longitude(),
+        lat: req.body.lat,
+        lon: req.body.lon,
         date_from: new Date().toJSON().slice(0,10),
         date_to: new Date().toJSON().slice(0,10)
     }
+    console.log(newItem)
+
     if(!newItem.user_id || !newItem.keywords || !newItem.description){
         res.status(405).json("There is an empty field")
     }else{
