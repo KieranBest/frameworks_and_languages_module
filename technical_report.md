@@ -129,8 +129,23 @@ Client Language Features
 Critique of Server/Client prototype
 ---------------------
 
-### (name of Issue 1)
+### Displaying Items
 
+```javascript
+function renderItems(data) {
+		const $item_list = document.querySelector(`[data-page="items"] ul`);
+		const new_item_element = () => document.querySelector(`[data-page="items"] li`).cloneNode(true);
+
+		for (let item_data of data) {
+			const $new_item_element = new_item_element();
+			$item_list.appendChild($new_item_element);
+			renderDataToTemplate(item_data, $new_item_element, renderItemListFieldLookup);
+			attachDeleteAction($new_item_element);
+		}
+	}
+```
+
+This function does not store the items data to the client, instead only displaying it directly from the server. 
 (A code snippet example demonstrating the feature - 1 mark)
 (Explain why this pattern is problematic - 40ish words 1 mark)
 
