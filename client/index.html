@@ -22,15 +22,15 @@
        Image: <input v-model="Item.image" name="image" type="url" placeholder="input your image url"><br>
        Latitude: <input v-model="Item.lat" name="lat" type="text" placeholder="type your latitude"><br>
        Longitude: <input v-model="Item.lon" name="lon" type="text" placeholder="type your longitude"><br>
-       <button>Submit</button>
+       <button onclick="document.getElementById('displayList')">Submit</button>
      </form>
-     <ul data-action="create_item">
+     <ul id="displayList">
        <li v-for="Item in Items">
          <span data-field="id">{{Item.id}}</span>
          User Id: <span>{{Item.user_id}}</span>
          Keywords: <span>{{Item.keywords}}</span>
          Description: <span>{{Item.description}}</span>
-         <span>img src={{image}}</span>
+         <span>{{Item.image}}</span>
          Latitude: <span>{{Item.lat}}</span>
          Longitude: <span>{{Item.lon}}</span>
          <button @click="delete(Item.id)" data-field="id" data-action="delete">Delete</button>
