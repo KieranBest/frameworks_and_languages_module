@@ -15,25 +15,25 @@
 <body>
    <h1>FreeCycle</h1>
    <div id="app">
-     <form  @:submit.prevent="create_item" data-action="create_item">
+     <form  @:submit.prevent="create_item">
        User Id: <input v-model="Item.user_id" name="user_id" type="text" placeholder="type your name in"><br>
        Keywords: <input v-model="Item.keywords" name="keywords" type="text" placeholder="type some keywords"><br>
        Description: <textarea v-model="Item.description" name="description" type="text" placeholder="enter a description"></textarea><br>       
        Image: <input v-model="Item.image" name="image" type="url" placeholder="input your image url"><br>
        Latitude: <input v-model="Item.lat" name="lat" type="text" placeholder="type your latitude"><br>
        Longitude: <input v-model="Item.lon" name="lon" type="text" placeholder="type your longitude"><br>
-       <button onclick="document.getElementById('displayList')">Submit</button>
+       <button data-action="create_item" type="submit">Submit</button>
      </form>
-     <ul id="displayList">
+     <ul>
        <li v-for="Item in Items">
          <span data-field="id">{{Item.id}}</span>
          User Id: <span>{{Item.user_id}}</span>
          Keywords: <span>{{Item.keywords}}</span>
          Description: <span>{{Item.description}}</span>
-         <span>{{Item.image}}</span>
+         <span>Image.url='{{Item.image}}'</span>
          Latitude: <span>{{Item.lat}}</span>
          Longitude: <span>{{Item.lon}}</span>
-         <button @click="delete(Item.id)" data-field="id" data-action="delete">Delete</button>
+         <button @click="delete(Item.id)" data-action="delete">Delete</button>
        </li>
      </ul>
    </div>
@@ -97,7 +97,7 @@ createApp({
       .catch(err => console.error(err));
     },
     delete(id){
-      fetch(`${urlAPI}/item/${id}`,{
+      fetch(`${urlAPI}/item/${Item.id}`,{
         method: 'DELETE',
       }).then (this.getItems)
         .catch(err=>console.error(err));
