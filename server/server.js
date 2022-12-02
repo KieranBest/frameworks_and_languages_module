@@ -88,7 +88,6 @@ function maxValue(idValue){
 
 //Delete request
 app.delete('/item/:id', (req,res) => {
-    console.log("trying")
     if (Object.keys(Item).includes(req.params.id)){
         res.status(204).json("Ok")
         delete(Item[req.params.id])

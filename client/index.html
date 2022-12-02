@@ -15,14 +15,14 @@
 <body>
    <h1>FreeCycle</h1>
    <div id="app">
-     <form  @:submit.prevent="create_item">
+     <form  @:submit.prevent="create_item" data-field="user_id">
        User Id: <input v-model="Item.user_id" name="user_id" type="text" placeholder="type your name in"><br>
        Keywords: <input v-model="Item.keywords" name="keywords" type="text" placeholder="type some keywords"><br>
        Description: <textarea v-model="Item.description" name="description" type="text" placeholder="enter a description"></textarea><br>       
        Image: <input v-model="Item.image" name="image" type="url" placeholder="input your image url"><br>
        Latitude: <input v-model="Item.lat" name="lat" type="text" placeholder="type your latitude"><br>
        Longitude: <input v-model="Item.lon" name="lon" type="text" placeholder="type your longitude"><br>
-       <button data-action="create_item" type="submit">Submit</button>
+       <button data-action="create_item">Submit</button>
      </form>
      <ul>
        <li v-for="Item in Items">
@@ -33,7 +33,7 @@
          <span>Image.url='{{Item.image}}'</span>
          Latitude: <span>{{Item.lat}}</span>
          Longitude: <span>{{Item.lon}}</span>
-         <button @click="delete(Item.id)" data-action="delete">Delete</button>
+         <button @click="delete_item(Item.id)" data-action="delete">Delete</button>
        </li>
      </ul>
    </div>
@@ -62,11 +62,11 @@ createApp({
   }
 },
   created() {
-   this.clearItem()
-   this.getItems()
+   this.clear_Item()
+   this.get_Items()
 },
   methods: {
-    clearItem() {
+    clear_Item() {
       this.Item = { ...this.Item, ...{
         user_id: '',
         keywords: '',
@@ -84,11 +84,11 @@ createApp({
       })         
         .then(response => response.json())
         .then(json => console.log('create_item()',json))
-        .then(this.clearItem)
-        .then(this.getItems)
+        .then(this.clear_Item)
+        .then(this.get_Items)
         .catch(err=>console.error(err));
     },
-    getItems() {
+    get_Items() {
       fetch(`${urlAPI}/items`, {
         method: 'GET',
       })
@@ -96,10 +96,12 @@ createApp({
       .then(data => this.Items = data)
       .catch(err => console.error(err));
     },
-    delete(id){
-      fetch(`${urlAPI}/item/${Item.id}`,{
+    delete_item(id){
+      fetch(`${urlAPI}/item/${id}`,{
         method: 'DELETE',
-      }).then (this.getItems)
+      })
+      .then (json => console.log('delete_item()', json))
+      .then (this.get_Items)
         .catch(err=>console.error(err));
     }
   }
