@@ -1,77 +1,84 @@
 <html>
 <head>
-   <meta charset="utf-8" />
-   <link id="favicon" rel="shortcut icon" type="image/png" href="data:image/png;base64,....==" />
-   <title>FreeCycle</title>
+  <meta charset="utf-8" />
+  <link id="favicon" rel="shortcut icon" type="image/png" href="data:image/png;base64,....==" />
+  <title>FreeCycle</title>
 
-   <style>
-
-   </style>
-   <!-- vue installation-->
-   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-   <!-- Foundation Framework -->
-   <!-- Compressed CSS -->
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css" crossorigin="anonymous">
+  <style>
+  </style>
+  <!-- vue installation--> <!--https://get.foundation/sites/docs/-->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <!-- Foundation Framework -->
+  <!-- Compressed CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css" crossorigin="anonymous">
 
 </head>
 <body>
-   <h1><strong>FreeCycle</strong></h1>
-   <div id="app">
-     <form  @:submit.prevent="create_item" data-field="user_id">
-      <div class="grid-container">
-        <div class="grid-x grid-margin-x">
+  <div class="title-bar">
+    <div class="title-bar-left">
+      <span class="title-bar-title">
+        <h1><strong>FreeCycle</strong></h1>
+      </span>
+    </div>
+  </div>
+  <div id="app">
+    <div class="top-bar">
+      <form  @:submit.prevent="create_item" data-field="user_id">
+        <div class="grid-container">
+          <div class="grid-x grid-margin-x">
 
-          <div class="small-3 cell">
-            <label for="middle-label" class="text-right middle">User Id: </label>
-          </div>
-          <div class="small-9 cell">
-            <input id="middle-label" v-model="Item.user_id" name="user_id" type="text" placeholder="type your name in">
-          </div>
+            <div class="small-3 cell">
+              <label for="middle-label" class="text-right middle">User Id: </label>
+            </div>
+            <div class="small-9 cell">
+              <input id="middle-label" v-model="Item.user_id" name="user_id" type="text" placeholder="type your name in">
+            </div>
 
-          <div class="small-3 cell">
-            <label for="middle-label" class="text-right middle">Keywords: </label>
-          </div>
-          <div class="small-9 cell">
-            <input id="middle-label" v-model="Item.keywords" name="keywords" type="text" placeholder="type some keywords">
-          </div>
+            <div class="small-3 cell">
+              <label for="middle-label" class="text-right middle">Keywords: </label>
+            </div>
+            <div class="small-9 cell">
+              <input id="middle-label" v-model="Item.keywords" name="keywords" type="text" placeholder="type some keywords">
+            </div>
 
-          <div class="small-3 cell">
-            <label for="middle-label" class="text-right middle">Description: </label>
-          </div>
-          <div class="small-9 cell">
-            <textarea v-model="Item.description" name="description" type="text" placeholder="enter a description"></textarea>
-          </div>
+            <div class="small-3 cell">
+              <label for="middle-label" class="text-right middle">Description: </label>
+            </div>
+            <div class="small-9 cell">
+              <textarea v-model="Item.description" name="description" type="text" placeholder="enter a description"></textarea>
+            </div>
 
-          <div class="small-3 cell">
-            <label for="middle-label" class="text-right middle">Image: </label>
-          </div>
-          <div class="small-9 cell">
-            <input id="middle-label" v-model="Item.image" name="image" type="url" placeholder="input your image url">
-          </div>
+            <div class="small-3 cell">
+              <label for="middle-label" class="text-right middle">Image: </label>
+            </div>
+            <div class="small-9 cell">
+              <input id="middle-label" v-model="Item.image" name="image" type="url" placeholder="input your image url">
+            </div>
 
-          <div class="small-3 cell">
-            <label for="middle-label" class="text-right middle">Latitude: </label>
-          </div>
-          <div class="small-9 cell">
-            <input id="middle-label" v-model="Item.lat" name="lat" type="text" placeholder="type your latitude">
-          </div>
+            <div class="small-3 cell">
+              <label for="middle-label" class="text-right middle">Latitude: </label>
+            </div>
+            <div class="small-9 cell">
+              <input id="middle-label" v-model="Item.lat" name="lat" type="text" placeholder="type your latitude">
+            </div>
 
-          <div class="small-3 cell">
-            <label for="middle-label" class="text-right middle">Longitude: </label>
-          </div>
-          <div class="small-9 cell">
-            <input id="middle-label" v-model="Item.lon" name="lon" type="text" placeholder="type your longitude">
-          </div>
+            <div class="small-3 cell">
+              <label for="middle-label" class="text-right middle">Longitude: </label>
+            </div>
+            <div class="small-9 cell">
+              <input id="middle-label" v-model="Item.lon" name="lon" type="text" placeholder="type your longitude">
+            </div>
 
-          <div class="small-9 cell">
-            <button id="middle-label"class="button" data-action="create_item">Submit</button>
+            <div class="small-3 cell">
+              <button id="middle-label"class="button" data-action="create_item">Submit</button>
+            </div>
           </div>
         </div>
       </div>
     </form>
-<!--https://get.foundation/sites/docs/xy-grid.html-->
+    <br />
 
-    
+    <!--https://get.foundation/sites/docs/xy-grid.html-->   
     <ul style="list-style:none">
       <li v-for="Item in Items">
         <div class="grid-container">
@@ -84,11 +91,17 @@
                     <div class="card-section">
                       <img :src="Item.image">
                       <div class="card-section">
-                        <p><strong>Keywords: </strong>{{Item.keywords}}</p>
-                        <p><strong>Description: </strong>{{Item.description}}</p>
-                        <p><strong>Latitude: </strong>{{Item.lat}}</p>
-                        <p><strong>Longitude: </strong>{{Item.lon}}</p>
-                        <button class="button" @click="delete_item(Item.id)" data-action="delete">Delete</button>
+                        <dl>
+                          <dt>Keywords: </dt>
+                          <dd>{{Item.keywords}}</dd>
+                          <dt>Description: </dt>
+                          <dd>{{Item.description}}</dd>
+                          <dt>Latitude: </dt>
+                          <dd>{{Item.lat}}</dd>
+                          <dt>Longitude: </dt>
+                          <dd>{{Item.lon}}</dd>
+                          <br><button class="button" @click="delete_item(Item.id)" data-action="delete">Delete</button>
+                        </dl>
                       </div>
                     </div>
                   </div>
@@ -126,8 +139,8 @@ createApp({
   }
 },
   created() {
-   this.clear_Item()
-   this.get_Items()
+    this.clear_Item()
+    this.get_Items()
 },
   methods: {
     clear_Item() {

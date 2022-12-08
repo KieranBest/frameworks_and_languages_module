@@ -67,8 +67,6 @@ app.post('/item', (req,res) => {
         date_from: new Date().toJSON().slice(0,10),
         date_to: new Date().toJSON().slice(0,10)
     }
-    console.log(newItem)
-
     if(!newItem.user_id || !newItem.keywords || !newItem.description){
         res.status(405).json("There is an empty field")
     }else{
