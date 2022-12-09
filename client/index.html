@@ -6,7 +6,7 @@
 
   <style>
   </style>
-  <!-- vue installation--> <!--https://get.foundation/sites/docs/-->
+  <!-- vue installation-->
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <!-- Foundation Framework -->
   <!-- Compressed CSS -->
@@ -23,6 +23,7 @@
   </div>
   <div id="app">
     <div class="top-bar">
+      <!--Create new Item form-->
       <form  @:submit.prevent="create_item" data-field="user_id">
         <div class="grid-container">
           <div class="grid-x grid-margin-x">
@@ -68,7 +69,7 @@
             <div class="small-9 cell">
               <input id="middle-label" v-model="Item.lon" name="lon" type="text" placeholder="type your longitude">
             </div>
-
+              <!--Submit form button-->
             <div class="small-3 cell">
               <button id="middle-label"class="button" data-action="create_item">Submit</button>
             </div>
@@ -77,8 +78,7 @@
       </div>
     </form>
     <br />
-
-    <!--https://get.foundation/sites/docs/xy-grid.html-->   
+      <!--Displays all Items within a unordered list-->
     <ul style="list-style:none">
       <li v-for="Item in Items">
         <div class="grid-container">
@@ -100,6 +100,7 @@
                           <dd>{{Item.lat}}</dd>
                           <dt>Longitude: </dt>
                           <dd>{{Item.lon}}</dd>
+                          <!--Individual delete button for each Item-->
                           <br><button class="button" @click="delete_item(Item.id)" data-action="delete">Delete</button>
                         </dl>
                       </div>
@@ -124,6 +125,7 @@ const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');
 createApp({
   data(){
     return {
+      // Input Item to create new Item
         Item: {
           id:'',
           user_id:'',
@@ -135,14 +137,17 @@ createApp({
           date_from:'',
           date_to:''
         },
+        // List of Items
         Items: [],
   }
 },
+// On creation, clear form and retrieve any items from server 
   created() {
     this.clear_Item()
     this.get_Items()
 },
   methods: {
+    // Clear items from form
     clear_Item() {
       this.Item = { ...this.Item, ...{
         user_id: '',
@@ -187,3 +192,15 @@ createApp({
 </script>
 </body>
 </html>
+
+<!-- References 
+  https://github.com/calaldees/frameworks_and_languages_module
+  https://learn.canterbury.ac.uk/ultra/courses/_19265_1/outline/lti/launchFrame?toolHref=https:~2F~2Flearn.canterbury.ac.uk~2Fwebapps~2Fblackboard~2Fexecute~2Fblti~2FlaunchPlacement%3Fblti_placement_id%3D_3_1%26content_id%3D_3348022_1%26course_id%3D_19265_1%26wrapped%3Dtrue%26from_ultra%3Dtrue
+  https://get.foundation/sites/docs/
+  https://get.foundation/sites/docs/button.html
+  https://get.foundation/sites/docs/top-bar.html
+  https://get.foundation/sites/docs/xy-grid.html
+  https://get.foundation/sites/docs/typography-base.html
+  https://github.com/Reem-313/frameworks_and_languages_module
+  https://github.com/Joshua-Yuill/frameworks_and_languages_module
+-->
