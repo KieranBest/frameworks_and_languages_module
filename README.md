@@ -1,8 +1,7 @@
-# Frameworks and Languages Module
-## Kieran Best
-## Programming Frameworks and Languages
-## Digital Artefact
-## MCOMD3PFL
+<h1><center> Frameworks and Languages Module </center></h1>
+<h2><center> Kieran Best </center></h2>  
+<h2><center> Digital Artefact </center></h2>  
+<h2><center> MCOMD3PFL </center></h2> 
 
 
 ## Requirements
@@ -46,7 +45,7 @@ with xxx being your github account.
 
 ## Evidence of Use
 
-![image](https://user-images.githubusercontent.com/74361879/206766329-16a13627-1629-4e52-b557-9ab80830a478.png)
-![image](https://user-images.githubusercontent.com/74361879/206767331-baeb93cd-6491-480f-b14a-890a0faadc18.png)
-![image](https://user-images.githubusercontent.com/74361879/206767410-946e4367-c274-4efe-8ec0-b82f262a806b.png)
-![image](https://user-images.githubusercontent.com/74361879/206767521-909574d7-2c1d-4172-a6c5-b3d01a40ae9d.png)
+<img src="https://user-images.githubusercontent.com/74361879/206766329-16a13627-1629-4e52-b557-9ab80830a478.png" width="200">
+<img src="https://user-images.githubusercontent.com/74361879/206767331-baeb93cd-6491-480f-b14a-890a0faadc18.png" width="200">
+<img src="https://user-images.githubusercontent.com/74361879/206767410-946e4367-c274-4efe-8ec0-b82f262a806b.png" width="200">
+<img src="https://user-images.githubusercontent.com/74361879/206767521-909574d7-2c1d-4172-a6c5-b3d01a40ae9d.png" width="200">
