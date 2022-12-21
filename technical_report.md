@@ -37,7 +37,7 @@ app.get('/item/:id', (req,res) => {
 })
 ```
 
-This enables us to handle requests and provide the necessary response. For example, return the HTTP status code followed by the specific Item requested in the json format.
+This enables us to handle requests and provide the necessary response. For example, return the HTTP status code followed by the specific Item requested by the parameter in the json format.
 
 [Express.JS Middleware](https://expressjs.com/en/guide/using-middleware.html)
 [Middleware in Express JS](https://www.geeksforgeeks.org/middleware-in-express-js/#:~:text=js%20is%20a%20routing%20and,controller%20actions%20send%20the%20response)
@@ -56,12 +56,40 @@ This enables the server the ability to wait for HTTP requests that match the spe
 
 [Express Routing](https://expressjs.com/en/guide/routing.html)
 
-### (name of Feature 3)
+### Templates
 
-(Technical description of the feature - 40ish words - 1 mark)
-(A code block snippet example demonstrating the feature - 1 mark)
-(Explain the problem-this-is-solving/why/benefits/problems - 40ish words - 1 mark)
-(Provide reference urls to your sources of information about the feature - required)
+A template engine allows the use of static templates for your application, popular templates include Pug, Mustache and EJS, however there are many others. At runtime a template engine replaces variables within the template with actual values, or run some programming logic, before transforming the template into HTML that is sent to the client.
+
+For example, when using Pug, the input would be:
+```
+doctype html  
+html  
+    head  
+        title A simple pug example  
+    body  
+        h1 This page is produced by pug template engine  
+        p some paragraph here..   
+```
+The ouput
+```html
+<!DOCTYPE html>  
+<html>  
+  <head>  
+    <title>A simple pug example</title>  
+  </head>  
+  <body>  
+    <h1>This page is produced by pug template engine</h1>  
+    <p>some paragraph here..</p>  
+  </body>  
+</html>  
+```
+
+Templates are used to speed up for the design of HTML pages by allowing us to create reusable components that can be used across other files. This stops duplication and makes implementing changes easier. 
+
+[Using template engines with Express](https://expressjs.com/en/guide/using-template-engines.html)
+[Developing template engines for Express](https://expressjs.com/en/advanced/developing-template-engines.html)
+[Express.js Template Engine](https://www.javatpoint.com/expressjs-template)
+[Top Express.js template engines for dynamic HTML pages](https://blog.logrocket.com/top-express-js-template-engines-for-dynamic-html-pages/)
 
 
 Server Language Features
@@ -190,6 +218,7 @@ In the above snippet we have already understood that `v-for` will display all It
 [Template Syntax](https://vuejs.org/guide/essentials/template-syntax.html)
 [VueJs - Interpolations](https://dev.to/eligarlo/vuejs-interpolations-f3)
 
+
 Client Language Features
 ------------------------
 
@@ -205,23 +234,22 @@ The `this` keyword refers to a object that is dependent on how it is being calle
 
 ### `let`, `const` & `var`
 
-`let` and `const` were released in the ES2015 update and are an alternative to `var`. Declaring a variable as `var` enables the user to access this variable publicly and enable them to be redeclared. However, declaring a variable using `let` or `const` means they are block scoped and bounded to where they are defined. It is more common to use `let` and `const` these days unless working in a browser pre-2015.
+`let` and `const` were released in the ES2015 update and are an alternative to `var`. Declaring a variable as `var` enables the user to access this variable publicly and enables them to be redeclared. However, declaring a variable using `let` or `const` means they are block scoped and bounded to where they are defined. It is more common to use `let` and `const` these days unless working in a browser pre-2015.
 When choosing which keyword to use to declare a variable it must be considered that `const` variables cannot be changed once declared whereas `let` variables are changeable.
 
 ```javascript
 const urlParams = new URLSearchParams(window.location.search);
 ```
-The `urlParams` never needs to change once it is declared and is therefore declared as a `const`.
+The `urlParams` variable never needs to change once it is declared and is therefore declared as a `const`.
 
 [JavaScript Variables](https://www.w3schools.com/js/js_variables.asp)
 [Var, Let, and Const – What's the Difference?](https://www.freecodecamp.org/news/var-let-and-const-whats-the-difference/)
 
 
-
 Critique of Server/Client prototype
 ---------------------
 
-### While True
+### Infinite Loop
 
 ```python
 while True:
@@ -243,15 +271,39 @@ while True:
 ```
 
 
-`while True` creates a infinite loop that cannot be stopped without forceful interference, it remains active and waiting for a request or response. 
+`while True` creates a infinite loop that remains active and waiting for a request or response and cannot be stopped without forceful interference as there is no function to stop the loop. This could potentially result in a loss of data when forcefully stopped.
 
-(A code snippet example demonstrating the feature - 1 mark)
-(Explain why this pattern is problematic - 40ish words 1 mark)
+### HTTP Response Codes 
 
-### (name of Issue 2)
+```python
+RESPONSE_CODES = {
+    200: 'OK',
+    201: 'Created',
+    204: 'No Content',
+    301: 'Moved Permanently',
+    304: 'Not Modified',
+    400: 'Bad Request',
+    401: 'Unauthorized',
+    403: 'Forbidden',
+    404: 'Not Found',
+    405: 'Method Not Allowed',
+    500: 'Internal Server Error',
+    501: 'Not Implemented',
+}
+```
+The list of HTTP response codes is incomplete and only contains 12 of 16 base codes therefore response handling could become problematic and cause crashes when receiving a response it is unfamiliar with. Containing these commmon HTTP codes may work in this use case, however it may not work in future use cases. The list is also modular and would be difficult to expand.
 
-(A code snippet example demonstrating the feature - 1 mark)
-(Explain why this pattern is problematic - 40ish words 1 mark)
+A few missing codes include:
+- 100 Continue
+- 101 Switching Protocols
+- 202 Accepted
+- 300 Multiple Choices
+- 408 Request Timeout
+- 500 Internal Server Error
+
+
+The complete list of HTTP Codes which is much larger than the 12 we currently have access to can be found here.
+[Complete list of HTTP codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 
 
 Future Technology Suggestions
