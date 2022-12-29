@@ -1,9 +1,6 @@
 Technical Report
 ================
 
-(intro)
-
-
 Server Framework Features
 -------------------------
 
@@ -351,8 +348,10 @@ REST API structure the HTTP requests based on the data required by the client, b
 
 GraphQL uses a type system to create a schema that predefines the capabilities of the API and acts as the contract between client queries and the server. 
 
+REST API
 <img src="https://user-images.githubusercontent.com/74361879/209963406-7f950bcc-5448-406f-aa46-bbf45e0360a9.png" width=500px>
 
+GraphQL
 <img src="https://user-images.githubusercontent.com/74361879/209963474-8bcfaf93-3a82-4bb1-a1de-a651be798851.png" width=500px>
 
 [GraphQL is the better REST](https://www.howtographql.com/basics/1-graphql-is-the-better-rest/)
