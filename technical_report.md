@@ -40,7 +40,9 @@ app.get('/item/:id', (req,res) => {
 This enables us to handle requests and provide the necessary response. For example, return the HTTP status code followed by the specific Item requested by the parameter in the json format.
 
 [Express.JS Middleware](https://expressjs.com/en/guide/using-middleware.html)
+
 [Middleware in Express JS](https://www.geeksforgeeks.org/middleware-in-express-js/#:~:text=js%20is%20a%20routing%20and,controller%20actions%20send%20the%20response)
+
 [Writing middleware for use in Express apps](https://expressjs.com/en/guide/writing-middleware.html)
 
 ### Routing
@@ -87,8 +89,11 @@ The ouput
 Templates are used to speed up for the design of HTML pages by allowing us to create reusable components that can be used across other files. This stops duplication and makes implementing changes easier. 
 
 [Using template engines with Express](https://expressjs.com/en/guide/using-template-engines.html)
+
 [Developing template engines for Express](https://expressjs.com/en/advanced/developing-template-engines.html)
+
 [Express.js Template Engine](https://www.javatpoint.com/expressjs-template)
+
 [Top Express.js template engines for dynamic HTML pages](https://blog.logrocket.com/top-express-js-template-engines-for-dynamic-html-pages/)
 
 
@@ -117,7 +122,9 @@ Object handling of 'key' and 'value' objects enable a dictionary like relationsh
 
 
 [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+
 [Date Methods](https://www.w3schools.com/js/js_date_methods.asp)
+
 [Objects](https://www.w3schools.com/js/js_objects.asp)
 
 
@@ -131,6 +138,7 @@ res.status(200).json(Object.values(Item).filter(obj => obj.user_id == req.query.
 This enables us to easily search through a large dataset and find the specific entry without having to change the original array.
 
 [Array.prototype.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
+
 [Javascript Array filter()](https://www.w3schools.com/jsref/jsref_filter.asp)
 
 
@@ -148,6 +156,7 @@ Using `v-model="Item.user_id"` allows the DOM input element access to create a n
 Without this we would need to manually connect the input text box with a event listener to automatically update the data input when a change occurs. 
 
 [What you should know about Vue v-model](https://learnvue.co/tutorials/v-model-guide)
+
 [Form Input Bindings](https://vuejs.org/guide/essentials/forms.html)
 
 ### List Rendering
@@ -216,6 +225,7 @@ Using the mustache tag (`{{ }}`) the value of declared property from the corresp
 In the above snippet we have already understood that `v-for` will display all Items in Item; using the mustache syntax, we are able to access and display each attribute within the Item. 
 
 [Template Syntax](https://vuejs.org/guide/essentials/template-syntax.html)
+
 [VueJs - Interpolations](https://dev.to/eligarlo/vuejs-interpolations-f3)
 
 
@@ -243,6 +253,7 @@ const urlParams = new URLSearchParams(window.location.search);
 The `urlParams` variable never needs to change once it is declared and is therefore declared as a `const`.
 
 [JavaScript Variables](https://www.w3schools.com/js/js_variables.asp)
+
 [Var, Let, and Const – What's the Difference?](https://www.freecodecamp.org/news/var-let-and-const-whats-the-difference/)
 
 
@@ -309,22 +320,41 @@ The complete list of HTTP Codes which is much larger than the 12 we currently ha
 Future Technology Suggestions
 -----------------------------
 
-### (name of technology/feature 1)
+### Serverless Architecture
 
-(Description of a feature or tool - 40ish words - 1 mark)
-(Why/benefits/problems with using this - 40ish words - 1 mark)
-(Provide reference urls to your source of information about this technology - required)
+A serverless architecture is a software design that enables third-party Backend as a Service (BaaS) services to host the application, reducing the need for a always-on server component. Choosing a serverless architecture reduces the cost both operational and scalability. Operational costs are reduced as you no longer need to manage the server, whether that be physical or virtual. Scalability costs are reduced because you no longer need to worry about how many concurrent requests you can handle, scaling is automatic and the more requests you receive, the more you pay. 
+It also reduces latency as the server is being hosted globally as opposed to a specific location which in turn makes it 'greener'.
 
+[Building Applications with Serverless Architectures](https://aws.amazon.com/lambda/serverless-architectures-learn-more/)
 
-### (name of technology/feature 2)
+[Serverless Architecture](https://martinfowler.com/articles/serverless.html)
 
-(Description of a feature or tool - 40ish words - 1 mark)
-(Why/benefits/problems with using this - 40ish words - 1 mark)
-(Provide reference urls to your source of information about this technology - required)
+[Serverless Architecture](https://www.twilio.com/docs/glossary/what-is-serverless-architecture)
 
 
-### (name of technology/feature 3)
+### NoSQL
 
-(Description of a feature or tool - 40ish words - 1 mark)
-(Why/benefits/problems with using this - 40ish words - 1 mark)
-(Provide reference urls to your source of information about this technology - required)
+NoSQL database is a non-relational data management system, it does not have a fixed schema and is therefore fully flexible in its horizontal scaling. NoSQL can also handle large volumes of data and is used by internet giants such as Google and Facebook. NoSQL allows multiple data models such as document-based, key value, column-based and grap-based. NoSQL provides easy replication, it can be accessed via multiple machines and will lead to eventual consistency across all machines. 
+
+Even though NoSQL is fully scalable, doing so does require adding more hardware to the system and this can then become costly. NoSQL also contains limited query capabilities and is dependent on the database used as each has its own syntax for querying and managing data. 
+
+[NoSQL Tutorial: What is, Types of NoSQL Databases & Example](https://www.guru99.com/nosql-tutorial.html)
+
+[NoSQL (Not Only SQL database)](https://www.techtarget.com/searchdatamanagement/definition/NoSQL-Not-Only-SQL)
+
+
+### GraphQL
+
+GraphQL is an alternative to REST APIs, it was developed to cope with the need for more flexibility and efficiency in client-server communication. It does this by removing over- and underfetching that is created from GET requests by sending multiple requests for multiple pieces of data. Instead, only one request needs to be made, detailing all its needs. 
+
+REST API structure the HTTP requests based on the data required by the client, but if the clients needs change, then the server must too. GraphQL does not need the server to change if the clients requirements change, clients are able to specify and retrieve their exact requirements without the server needing to be updated. 
+
+GraphQL uses a type system to create a schema that predefines the capabilities of the API and acts as the contract between client queries and the server. 
+
+<img src="https://user-images.githubusercontent.com/74361879/209963406-7f950bcc-5448-406f-aa46-bbf45e0360a9.png" width=500px>
+
+<img src="https://user-images.githubusercontent.com/74361879/209963474-8bcfaf93-3a82-4bb1-a1de-a651be798851.png" width=500px>
+
+[GraphQL is the better REST](https://www.howtographql.com/basics/1-graphql-is-the-better-rest/)
+
+[What is GraphQL](https://www.redhat.com/en/topics/api/what-is-graphql)
