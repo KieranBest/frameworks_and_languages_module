@@ -6,7 +6,7 @@ Server Framework Features
 
 ### Middleware 
 
-Middleware functions handle the routing protocols by having access to request and response objects working between cycles. Middleware is executed after the server receives the request but before a response is sent. The request object represents the HTTP request and enables the use of parameters and query string from the url, whereas the response object is the returning data such as the requested data amd HTTP status code.
+Middleware functions handle the routing protocols by having access to request and response objects working between cycles. Middleware is executed after the server receives the request but before a response is sent. The request object represents the HTTP request and enables the use of parameters and query string from the url, whereas the response object is the returning data such as the requested data and HTTP status code.
 
 `req.query` contains a property for a query parameter and is defined in the route using a '?key=value'.
 
